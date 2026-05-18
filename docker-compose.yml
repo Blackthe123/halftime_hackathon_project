@@ -1,0 +1,43 @@
+services:
+
+  backend:
+    image: mysite-backend
+    pull_policy: never
+    container_name: mysite-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: runner
+    ports:
+      - 8000:8000
+    env_file:
+      - ./backend/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    image: mysite-frontend
+    pull_policy: never
+    container_name: mysite-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: mysite-postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - ./postgres/.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mysite -d todolist"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres-data:
