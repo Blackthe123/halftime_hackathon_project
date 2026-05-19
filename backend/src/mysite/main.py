@@ -13,7 +13,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr, Field
-from sqlalchemy import Column, ForeignKey, String, Text, Table, DateTime, delete
+from sqlalchemy import Column, ForeignKey, String, Text, Table, DateTime, Boolean, delete
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, relationship, selectinload, sessionmaker
@@ -69,6 +69,10 @@ class Group(Base):
 
     members = relationship("User", secondary=group_members, back_populates="groups")
     messages = relationship("Message", back_populates="group", cascade="all, delete-orphan")
+    timetable = relationship(
+        "GroupTimetable", back_populates="group",
+        uselist=False, cascade="all, delete-orphan"
+    )
 
 
 class Message(Base):
@@ -95,6 +99,25 @@ class UserGroupCourse(Base):
         primary_key=True,
     )
     course_code = Column(String(20), primary_key=True)
+
+
+class GroupTimetable(Base):
+    """
+    Stores the latest computed optimised timetable for a group.
+    One row per group (upserted). Invalidated when any member changes their courses.
+    """
+    __tablename__ = "group_timetables"
+
+    group_id = Column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("groups.id", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    result_json = Column(Text, nullable=False)          # JSON blob of algo result
+    computed_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    invalidated = Column(Boolean, nullable=False, default=False)
+
+    group = relationship("Group", back_populates="timetable")
 
 
 # ── Lifespan ──────────────────────────────────────────────────────────────────
@@ -265,9 +288,22 @@ class MemberCoursesOut(BaseModel):
 
 class GroupCoursesOut(BaseModel):
     members: list[MemberCoursesOut]
-    ready_count: int   # members who have ≥1 course
-    total_count: int   # total group members
-    is_ready: bool     # True when ready_count >= 2
+    ready_count: int
+    total_count: int
+    is_ready: bool
+
+
+class TimetableSave(BaseModel):
+    result_json: str  # JSON string produced by the frontend algorithm
+
+
+class TimetableOut(BaseModel):
+    group_id: UUID
+    result_json: str
+    computed_at: datetime
+    invalidated: bool
+
+    model_config = {"from_attributes": True}
 
 
 # ── Auth Routes ───────────────────────────────────────────────────────────────
@@ -437,10 +473,6 @@ async def get_group(group_id: UUID, current_user: User = Depends(get_current_use
 
 @app.delete("/groups/{group_id}/leave", status_code=204)
 async def leave_group(group_id: UUID, current_user: User = Depends(get_current_user)):
-    """
-    Remove the current user from the group.
-    The group owner cannot leave — they must delete the group or transfer ownership first.
-    """
     async with async_session() as session:
         result = await session.execute(select(Group).where(Group.id == group_id))
         group = result.scalar_one_or_none()
@@ -466,9 +498,6 @@ async def leave_group(group_id: UUID, current_user: User = Depends(get_current_u
 
 @app.delete("/groups/{group_id}", status_code=204)
 async def delete_group(group_id: UUID, current_user: User = Depends(get_current_user)):
-    """
-    Delete the group. Only the owner can do this.
-    """
     async with async_session() as session:
         result = await session.execute(select(Group).where(Group.id == group_id))
         group = result.scalar_one_or_none()
@@ -572,7 +601,6 @@ async def get_group_courses(
     group_id: UUID,
     current_user: User = Depends(get_current_user),
 ):
-    """Returns course selections for every member of the group."""
     async with async_session() as session:
         result = await session.execute(
             select(Group)
@@ -585,13 +613,11 @@ async def get_group_courses(
 
         await assert_member(session, current_user.id, group_id)
 
-        # Fetch all course rows for this group
         result = await session.execute(
             select(UserGroupCourse).where(UserGroupCourse.group_id == group_id)
         )
         all_selections = result.scalars().all()
 
-        # Build user_id -> [course_code] map
         courses_map: dict[UUID, list[str]] = {}
         for sel in all_selections:
             courses_map.setdefault(sel.user_id, []).append(sel.course_code)
@@ -621,7 +647,7 @@ async def update_my_courses(
     body: CourseSelection,
     current_user: User = Depends(get_current_user),
 ):
-    """Replace the calling user's course selections for the group."""
+    """Replace the calling user's course selections and invalidate any cached timetable."""
     async with async_session() as session:
         result = await session.execute(select(Group).where(Group.id == group_id))
         if not result.scalar_one_or_none():
@@ -629,7 +655,7 @@ async def update_my_courses(
 
         await assert_member(session, current_user.id, group_id)
 
-        # Delete existing selections for this user+group
+        # Delete existing course selections
         await session.execute(
             delete(UserGroupCourse).where(
                 UserGroupCourse.user_id == current_user.id,
@@ -637,7 +663,7 @@ async def update_my_courses(
             )
         )
 
-        # Insert new selections (deduplicated, uppercased)
+        # Insert new selections
         seen = set()
         for code in body.course_codes:
             normalised = code.strip().upper()
@@ -651,7 +677,119 @@ async def update_my_courses(
                     )
                 )
 
+        # Invalidate cached timetable — any course change means the result is stale
+        existing_tt = await session.execute(
+            select(GroupTimetable).where(GroupTimetable.group_id == group_id)
+        )
+        tt = existing_tt.scalar_one_or_none()
+        if tt:
+            tt.invalidated = True
+
         await session.commit()
+
+
+# ── Timetable Routes ──────────────────────────────────────────────────────────
+
+
+@app.get("/groups/{group_id}/timetable", response_model=TimetableOut)
+async def get_timetable(
+    group_id: UUID,
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Returns the latest computed timetable for the group.
+    Returns 404 if no timetable has been computed yet.
+    The `invalidated` flag tells the client whether to prompt a rerun.
+    """
+    async with async_session() as session:
+        result = await session.execute(select(Group).where(Group.id == group_id))
+        if not result.scalar_one_or_none():
+            raise HTTPException(status_code=404, detail="Group not found")
+
+        await assert_member(session, current_user.id, group_id)
+
+        result = await session.execute(
+            select(GroupTimetable).where(GroupTimetable.group_id == group_id)
+        )
+        tt = result.scalar_one_or_none()
+        if not tt:
+            raise HTTPException(status_code=404, detail="No timetable computed yet")
+
+    return TimetableOut(
+        group_id=tt.group_id,
+        result_json=tt.result_json,
+        computed_at=tt.computed_at,
+        invalidated=tt.invalidated,
+    )
+
+
+@app.post("/groups/{group_id}/timetable", response_model=TimetableOut, status_code=201)
+async def save_timetable(
+    group_id: UUID,
+    body: TimetableSave,
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Save a computed timetable result for the group (upsert).
+    Any member can trigger this after running the algorithm client-side.
+    """
+    async with async_session() as session:
+        result = await session.execute(select(Group).where(Group.id == group_id))
+        if not result.scalar_one_or_none():
+            raise HTTPException(status_code=404, detail="Group not found")
+
+        await assert_member(session, current_user.id, group_id)
+
+        existing = await session.execute(
+            select(GroupTimetable).where(GroupTimetable.group_id == group_id)
+        )
+        tt = existing.scalar_one_or_none()
+
+        now = datetime.now(timezone.utc)
+        if tt:
+            tt.result_json  = body.result_json
+            tt.computed_at  = now
+            tt.invalidated  = False
+        else:
+            tt = GroupTimetable(
+                group_id    = group_id,
+                result_json = body.result_json,
+                computed_at = now,
+                invalidated = False,
+            )
+            session.add(tt)
+
+        await session.commit()
+        await session.refresh(tt)
+
+    return TimetableOut(
+        group_id    = tt.group_id,
+        result_json = tt.result_json,
+        computed_at = tt.computed_at,
+        invalidated = tt.invalidated,
+    )
+
+
+@app.delete("/groups/{group_id}/timetable", status_code=204)
+async def invalidate_timetable(
+    group_id: UUID,
+    current_user: User = Depends(get_current_user),
+):
+    """Explicitly mark the timetable as invalidated (e.g. after a course change)."""
+    async with async_session() as session:
+        result = await session.execute(select(Group).where(Group.id == group_id))
+        if not result.scalar_one_or_none():
+            raise HTTPException(status_code=404, detail="Group not found")
+
+        await assert_member(session, current_user.id, group_id)
+
+        existing = await session.execute(
+            select(GroupTimetable).where(GroupTimetable.group_id == group_id)
+        )
+        tt = existing.scalar_one_or_none()
+        if tt:
+            tt.invalidated = True
+            await session.commit()
 
 
 if __name__ == "__main__":
