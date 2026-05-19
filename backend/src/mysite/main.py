@@ -13,11 +13,11 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr, Field
-from sqlalchemy import Column, ForeignKey, String, Text, Table
+from sqlalchemy import Column, ForeignKey, String, Text, Table, DateTime
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, relationship, selectinload, sessionmaker
-from sqlalchemy import select
+from sqlalchemy import select, func
 
 # ── Config ────────────────────────────────────────────────────────────────────
 
@@ -68,6 +68,20 @@ class Group(Base):
     owner_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
 
     members = relationship("User", secondary=group_members, back_populates="groups")
+    messages = relationship("Message", back_populates="group", cascade="all, delete-orphan")
+
+
+class Message(Base):
+    __tablename__ = "messages"
+
+    id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid4)
+    group_id = Column(PG_UUID(as_uuid=True), ForeignKey("groups.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
+    group = relationship("Group", back_populates="messages")
+    user = relationship("User")
 
 
 # ── Lifespan ──────────────────────────────────────────────────────────────────
@@ -87,14 +101,9 @@ app = FastAPI(lifespan=lifespan, title="InSync API")
 
 ALLOWED_ORIGINS = {"http://localhost", "http://localhost:3000"}
 
+
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
-    """
-    Re-apply CORS headers on error responses.
-    Starlette's CORSMiddleware does not reliably decorate responses that are
-    produced by its own exception handler, so browsers see a CORS error on top
-    of the real HTTP error.  Handling it here guarantees the header is present.
-    """
     origin = request.headers.get("origin", "")
     headers = {}
     if origin in ALLOWED_ORIGINS:
@@ -105,6 +114,7 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         content={"detail": exc.detail},
         headers=headers,
     )
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -136,9 +146,7 @@ def generate_invite_code(length: int = 8) -> str:
     return "".join(random.choices(string.ascii_uppercase + string.digits, k=length))
 
 
-async def get_current_user(
-    token: str = Depends(oauth2_scheme),
-) -> User:
+async def get_current_user(token: str = Depends(oauth2_scheme)) -> User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid or expired token",
@@ -158,6 +166,18 @@ async def get_current_user(
         if user is None:
             raise credentials_exception
         return user
+
+
+async def assert_member(session: AsyncSession, user_id: UUID, group_id: UUID) -> None:
+    """Raises 403 if the user is not a member of the group."""
+    membership = await session.execute(
+        select(group_members).where(
+            group_members.c.user_id == user_id,
+            group_members.c.group_id == group_id,
+        )
+    )
+    if not membership.first():
+        raise HTTPException(status_code=403, detail="Not a member of this group")
 
 
 # ── Schemas ───────────────────────────────────────────────────────────────────
@@ -205,6 +225,21 @@ class GroupDetail(GroupOut):
     members: list[UserOut]
 
 
+class MessageCreate(BaseModel):
+    content: str = Field(min_length=1, max_length=2000)
+
+
+class MessageOut(BaseModel):
+    id: UUID
+    group_id: UUID
+    user_id: UUID
+    display_name: str
+    content: str
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
 # ── Auth Routes ───────────────────────────────────────────────────────────────
 
 
@@ -250,13 +285,12 @@ async def me(current_user: User = Depends(get_current_user)):
 # ── Group Routes ──────────────────────────────────────────────────────────────
 
 
-# ── GET /groups/me ────────────────────────────────────────────────────────────
 @app.get("/groups/me", response_model=list[GroupOut])
 async def my_groups(current_user: User = Depends(get_current_user)):
     async with async_session() as session:
         result = await session.execute(
             select(Group)
-            .options(selectinload(Group.members))          # ← add this
+            .options(selectinload(Group.members))
             .join(group_members, Group.id == group_members.c.group_id)
             .where(group_members.c.user_id == current_user.id)
         )
@@ -273,7 +307,6 @@ async def my_groups(current_user: User = Depends(get_current_user)):
         ]
 
 
-# ── POST /groups ──────────────────────────────────────────────────────────────
 @app.post("/groups", response_model=GroupOut, status_code=201)
 async def create_group(body: GroupCreate, current_user: User = Depends(get_current_user)):
     async with async_session() as session:
@@ -292,7 +325,6 @@ async def create_group(body: GroupCreate, current_user: User = Depends(get_curre
         )
         await session.commit()
 
-        # Re-fetch with members eagerly loaded
         result = await session.execute(
             select(Group).options(selectinload(Group.members)).where(Group.id == group.id)
         )
@@ -307,13 +339,12 @@ async def create_group(body: GroupCreate, current_user: User = Depends(get_curre
     )
 
 
-# ── POST /groups/join ─────────────────────────────────────────────────────────
 @app.post("/groups/join", response_model=GroupOut)
 async def join_group(body: GroupJoin, current_user: User = Depends(get_current_user)):
     async with async_session() as session:
         result = await session.execute(
             select(Group)
-            .options(selectinload(Group.members))          # ← add this
+            .options(selectinload(Group.members))
             .where(Group.invite_code == body.invite_code.upper())
         )
         group = result.scalar_one_or_none()
@@ -334,7 +365,6 @@ async def join_group(body: GroupJoin, current_user: User = Depends(get_current_u
         )
         await session.commit()
 
-        # Re-fetch so member_count reflects the new member
         result = await session.execute(
             select(Group).options(selectinload(Group.members)).where(Group.id == group.id)
         )
@@ -349,27 +379,19 @@ async def join_group(body: GroupJoin, current_user: User = Depends(get_current_u
     )
 
 
-# ── GET /groups/{group_id} ────────────────────────────────────────────────────
 @app.get("/groups/{group_id}", response_model=GroupDetail)
 async def get_group(group_id: UUID, current_user: User = Depends(get_current_user)):
     async with async_session() as session:
         result = await session.execute(
             select(Group)
-            .options(selectinload(Group.members))          # ← add this
+            .options(selectinload(Group.members))
             .where(Group.id == group_id)
         )
         group = result.scalar_one_or_none()
         if not group:
             raise HTTPException(status_code=404, detail="Group not found")
 
-        membership = await session.execute(
-            select(group_members).where(
-                group_members.c.user_id == current_user.id,
-                group_members.c.group_id == group_id,
-            )
-        )
-        if not membership.first():
-            raise HTTPException(status_code=403, detail="Not a member of this group")
+        await assert_member(session, current_user.id, group_id)
 
         members = [UserOut.model_validate(m) for m in group.members]
 
@@ -381,6 +403,146 @@ async def get_group(group_id: UUID, current_user: User = Depends(get_current_use
         member_count=len(members),
         members=members,
     )
+
+
+# ── NEW: Leave Group ──────────────────────────────────────────────────────────
+
+
+@app.delete("/groups/{group_id}/leave", status_code=204)
+async def leave_group(group_id: UUID, current_user: User = Depends(get_current_user)):
+    """
+    Remove the current user from the group.
+    The group owner cannot leave — they must delete the group or transfer ownership first.
+    """
+    async with async_session() as session:
+        result = await session.execute(select(Group).where(Group.id == group_id))
+        group = result.scalar_one_or_none()
+        if not group:
+            raise HTTPException(status_code=404, detail="Group not found")
+
+        await assert_member(session, current_user.id, group_id)
+
+        if group.owner_id == current_user.id:
+            raise HTTPException(
+                status_code=400,
+                detail="You're the owner — transfer ownership or delete the group before leaving",
+            )
+
+        await session.execute(
+            group_members.delete().where(
+                group_members.c.user_id == current_user.id,
+                group_members.c.group_id == group_id,
+            )
+        )
+        await session.commit()
+
+@app.delete("/groups/{group_id}", status_code=204)
+async def delete_group(group_id: UUID, current_user: User = Depends(get_current_user)):
+    """
+    Delete the group. Only the owner can do this.
+    """
+    async with async_session() as session:
+        result = await session.execute(select(Group).where(Group.id == group_id))
+        group = result.scalar_one_or_none()
+        if not group:
+            raise HTTPException(status_code=404, detail="Group not found")
+
+        if group.owner_id != current_user.id:
+            raise HTTPException(status_code=403, detail="Only the owner can delete the group")
+
+        # Manually delete associations in group_members to satisfy foreign key constraint
+        await session.execute(
+            group_members.delete().where(group_members.c.group_id == group_id)
+        )
+        await session.delete(group)
+        await session.commit()
+
+
+# ── NEW: Chat Routes ──────────────────────────────────────────────────────────
+
+
+@app.get("/groups/{group_id}/messages", response_model=list[MessageOut])
+async def get_messages(
+    group_id: UUID,
+    before: datetime | None = None,
+    limit: int = 50,
+    current_user: User = Depends(get_current_user),
+):
+    """
+    Returns up to `limit` messages for the group, newest-last.
+    Pass `before` (ISO datetime) to page backwards through history.
+    """
+    async with async_session() as session:
+        # Confirm group exists and user is a member
+        result = await session.execute(select(Group).where(Group.id == group_id))
+        if not result.scalar_one_or_none():
+            raise HTTPException(status_code=404, detail="Group not found")
+
+        await assert_member(session, current_user.id, group_id)
+
+        query = (
+            select(Message)
+            .options(selectinload(Message.user))
+            .where(Message.group_id == group_id)
+        )
+        if before:
+            query = query.where(Message.created_at < before)
+
+        query = query.order_by(Message.created_at.desc()).limit(limit)
+        result = await session.execute(query)
+        messages = result.scalars().all()
+
+    # Return in ascending order (oldest first) so the UI can append naturally
+    return [
+        MessageOut(
+            id=m.id,
+            group_id=m.group_id,
+            user_id=m.user_id,
+            display_name=m.user.display_name,
+            content=m.content,
+            created_at=m.created_at,
+        )
+        for m in reversed(messages)
+    ]
+
+
+@app.post("/groups/{group_id}/messages", response_model=MessageOut, status_code=201)
+async def send_message(
+    group_id: UUID,
+    body: MessageCreate,
+    current_user: User = Depends(get_current_user),
+):
+    async with async_session() as session:
+        result = await session.execute(select(Group).where(Group.id == group_id))
+        if not result.scalar_one_or_none():
+            raise HTTPException(status_code=404, detail="Group not found")
+
+        await assert_member(session, current_user.id, group_id)
+
+        message = Message(
+            id=uuid4(),
+            group_id=group_id,
+            user_id=current_user.id,
+            content=body.content,
+        )
+        session.add(message)
+        await session.commit()
+
+        # Re-fetch to get server-generated created_at and joined user
+        result = await session.execute(
+            select(Message).options(selectinload(Message.user)).where(Message.id == message.id)
+        )
+        message = result.scalar_one()
+
+    return MessageOut(
+        id=message.id,
+        group_id=message.group_id,
+        user_id=message.user_id,
+        display_name=message.user.display_name,
+        content=message.content,
+        created_at=message.created_at,
+    )
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
