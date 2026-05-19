@@ -13,7 +13,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr, Field
-from sqlalchemy import Column, ForeignKey, String, Text, Table, DateTime
+from sqlalchemy import Column, ForeignKey, String, Text, Table, DateTime, delete
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, relationship, selectinload, sessionmaker
@@ -82,6 +82,19 @@ class Message(Base):
 
     group = relationship("Group", back_populates="messages")
     user = relationship("User")
+
+
+class UserGroupCourse(Base):
+    """Stores which courses a user has selected for a specific group."""
+    __tablename__ = "user_group_courses"
+
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), primary_key=True)
+    group_id = Column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("groups.id", ondelete="CASCADE"),
+        primary_key=True,
+    )
+    course_code = Column(String(20), primary_key=True)
 
 
 # ── Lifespan ──────────────────────────────────────────────────────────────────
@@ -238,6 +251,23 @@ class MessageOut(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class CourseSelection(BaseModel):
+    course_codes: list[str] = Field(default_factory=list)
+
+
+class MemberCoursesOut(BaseModel):
+    user_id: UUID
+    display_name: str
+    course_codes: list[str]
+
+
+class GroupCoursesOut(BaseModel):
+    members: list[MemberCoursesOut]
+    ready_count: int   # members who have ≥1 course
+    total_count: int   # total group members
+    is_ready: bool     # True when ready_count >= 2
 
 
 # ── Auth Routes ───────────────────────────────────────────────────────────────
@@ -405,9 +435,6 @@ async def get_group(group_id: UUID, current_user: User = Depends(get_current_use
     )
 
 
-# ── NEW: Leave Group ──────────────────────────────────────────────────────────
-
-
 @app.delete("/groups/{group_id}/leave", status_code=204)
 async def leave_group(group_id: UUID, current_user: User = Depends(get_current_user)):
     """
@@ -436,6 +463,7 @@ async def leave_group(group_id: UUID, current_user: User = Depends(get_current_u
         )
         await session.commit()
 
+
 @app.delete("/groups/{group_id}", status_code=204)
 async def delete_group(group_id: UUID, current_user: User = Depends(get_current_user)):
     """
@@ -450,7 +478,6 @@ async def delete_group(group_id: UUID, current_user: User = Depends(get_current_
         if group.owner_id != current_user.id:
             raise HTTPException(status_code=403, detail="Only the owner can delete the group")
 
-        # Manually delete associations in group_members to satisfy foreign key constraint
         await session.execute(
             group_members.delete().where(group_members.c.group_id == group_id)
         )
@@ -458,7 +485,7 @@ async def delete_group(group_id: UUID, current_user: User = Depends(get_current_
         await session.commit()
 
 
-# ── NEW: Chat Routes ──────────────────────────────────────────────────────────
+# ── Chat Routes ───────────────────────────────────────────────────────────────
 
 
 @app.get("/groups/{group_id}/messages", response_model=list[MessageOut])
@@ -468,12 +495,7 @@ async def get_messages(
     limit: int = 50,
     current_user: User = Depends(get_current_user),
 ):
-    """
-    Returns up to `limit` messages for the group, newest-last.
-    Pass `before` (ISO datetime) to page backwards through history.
-    """
     async with async_session() as session:
-        # Confirm group exists and user is a member
         result = await session.execute(select(Group).where(Group.id == group_id))
         if not result.scalar_one_or_none():
             raise HTTPException(status_code=404, detail="Group not found")
@@ -492,7 +514,6 @@ async def get_messages(
         result = await session.execute(query)
         messages = result.scalars().all()
 
-    # Return in ascending order (oldest first) so the UI can append naturally
     return [
         MessageOut(
             id=m.id,
@@ -528,7 +549,6 @@ async def send_message(
         session.add(message)
         await session.commit()
 
-        # Re-fetch to get server-generated created_at and joined user
         result = await session.execute(
             select(Message).options(selectinload(Message.user)).where(Message.id == message.id)
         )
@@ -542,6 +562,96 @@ async def send_message(
         content=message.content,
         created_at=message.created_at,
     )
+
+
+# ── Course Routes ─────────────────────────────────────────────────────────────
+
+
+@app.get("/groups/{group_id}/courses", response_model=GroupCoursesOut)
+async def get_group_courses(
+    group_id: UUID,
+    current_user: User = Depends(get_current_user),
+):
+    """Returns course selections for every member of the group."""
+    async with async_session() as session:
+        result = await session.execute(
+            select(Group)
+            .options(selectinload(Group.members))
+            .where(Group.id == group_id)
+        )
+        group = result.scalar_one_or_none()
+        if not group:
+            raise HTTPException(status_code=404, detail="Group not found")
+
+        await assert_member(session, current_user.id, group_id)
+
+        # Fetch all course rows for this group
+        result = await session.execute(
+            select(UserGroupCourse).where(UserGroupCourse.group_id == group_id)
+        )
+        all_selections = result.scalars().all()
+
+        # Build user_id -> [course_code] map
+        courses_map: dict[UUID, list[str]] = {}
+        for sel in all_selections:
+            courses_map.setdefault(sel.user_id, []).append(sel.course_code)
+
+        members_out = [
+            MemberCoursesOut(
+                user_id=m.id,
+                display_name=m.display_name,
+                course_codes=sorted(courses_map.get(m.id, [])),
+            )
+            for m in group.members
+        ]
+
+        ready_count = sum(1 for m in members_out if m.course_codes)
+
+    return GroupCoursesOut(
+        members=members_out,
+        ready_count=ready_count,
+        total_count=len(members_out),
+        is_ready=ready_count >= 2,
+    )
+
+
+@app.put("/groups/{group_id}/my-courses", status_code=204)
+async def update_my_courses(
+    group_id: UUID,
+    body: CourseSelection,
+    current_user: User = Depends(get_current_user),
+):
+    """Replace the calling user's course selections for the group."""
+    async with async_session() as session:
+        result = await session.execute(select(Group).where(Group.id == group_id))
+        if not result.scalar_one_or_none():
+            raise HTTPException(status_code=404, detail="Group not found")
+
+        await assert_member(session, current_user.id, group_id)
+
+        # Delete existing selections for this user+group
+        await session.execute(
+            delete(UserGroupCourse).where(
+                UserGroupCourse.user_id == current_user.id,
+                UserGroupCourse.group_id == group_id,
+            )
+        )
+
+        # Insert new selections (deduplicated, uppercased)
+        seen = set()
+        for code in body.course_codes:
+            normalised = code.strip().upper()
+            if normalised and normalised not in seen:
+                seen.add(normalised)
+                session.add(
+                    UserGroupCourse(
+                        user_id=current_user.id,
+                        group_id=group_id,
+                        course_code=normalised,
+                    )
+                )
+
+        await session.commit()
 
 
 if __name__ == "__main__":

@@ -19,6 +19,8 @@
       --mid:     #7A6F65;
       --border:  #D9CFC0;
       --green:   #4A7C59;
+      --green-bg:#E8F5EE;
+      --green-bd:#C3E0CE;
       --radius:  12px;
     }
 
@@ -472,7 +474,6 @@
 
     .btn-cancel:hover { background: var(--border); }
 
-    /* Danger button for leave confirmation */
     .btn-danger {
       flex: 1;
       padding: .7rem;
@@ -514,7 +515,7 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       gap: 1rem;
     }
 
@@ -524,7 +525,6 @@
       font-weight: 700;
     }
 
-    /* Leave group button */
     .btn-leave {
       display: inline-flex;
       align-items: center;
@@ -544,6 +544,337 @@
     }
 
     .btn-leave:hover { background: #FEF0EC; border-color: #C0392B; }
+
+    /* ── Courses Card ─────────────────────────────── */
+    .courses-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      animation: fadeUp .35s ease both;
+    }
+
+    .courses-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .courses-card-label {
+      font-size: .78rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--mid);
+      margin-bottom: .2rem;
+    }
+
+    .courses-card-sub {
+      font-size: .85rem;
+      color: var(--mid);
+    }
+
+    /* Save button */
+    .btn-save-courses {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      padding: .45rem 1rem;
+      background: var(--clay);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .85rem;
+      font-weight: 500;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background .15s, opacity .15s;
+      box-shadow: 0 2px 8px rgba(196,113,74,.2);
+    }
+
+    .btn-save-courses:hover { background: var(--clay-dk); }
+    .btn-save-courses:disabled { opacity: .6; cursor: not-allowed; }
+
+    /* Course search combobox */
+    .course-search-wrap {
+      position: relative;
+      margin-bottom: .85rem;
+    }
+
+    .course-search-input {
+      width: 100%;
+      padding: .6rem .9rem .6rem 2.25rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .9rem;
+      color: var(--charcoal);
+      background: var(--cream);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    .course-search-input:focus {
+      border-color: var(--clay);
+      box-shadow: 0 0 0 3px rgba(196,113,74,.1);
+      background: white;
+    }
+
+    .course-search-icon {
+      position: absolute;
+      left: .7rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--mid);
+    }
+
+    .course-search-loading {
+      position: absolute;
+      right: .75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    /* Dropdown */
+    .course-dropdown {
+      position: absolute;
+      top: calc(100% + 5px);
+      left: 0; right: 0;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 28px rgba(44,40,37,.12);
+      z-index: 50;
+      overflow: hidden;
+      display: none;
+    }
+
+    .course-dropdown-item {
+      padding: .6rem .9rem;
+      font-size: .88rem;
+      font-family: 'DM Sans', monospace;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      transition: background .1s;
+      color: var(--charcoal);
+    }
+
+    .course-dropdown-item:hover,
+    .course-dropdown-item.hi {
+      background: var(--warm);
+    }
+
+    .course-dropdown-item .match { color: var(--clay); font-weight: 700; }
+
+    .course-dropdown-empty {
+      padding: .75rem .9rem;
+      font-size: .85rem;
+      color: var(--mid);
+      font-style: italic;
+    }
+
+    /* Course chips */
+    .course-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+      min-height: 28px;
+      margin-bottom: 1.25rem;
+      align-items: center;
+    }
+
+    .course-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      background: var(--warm);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: .25rem .5rem .25rem .7rem;
+      font-size: .8rem;
+      font-weight: 600;
+      font-family: 'DM Sans', monospace;
+      color: var(--charcoal);
+      letter-spacing: .03em;
+      animation: chipIn .15s ease both;
+    }
+
+    @keyframes chipIn {
+      from { opacity: 0; transform: scale(.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .chip-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--mid);
+      font-size: 1.05rem;
+      line-height: 1;
+      padding: 0 2px;
+      display: flex;
+      align-items: center;
+      transition: color .1s;
+      font-family: sans-serif;
+    }
+
+    .chip-remove:hover { color: #C0392B; }
+
+    .no-courses-hint {
+      font-size: .85rem;
+      color: var(--mid);
+      font-style: italic;
+    }
+
+    /* ── Readiness section ────────────────────────── */
+    .readiness-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1rem -1.5rem;
+    }
+
+    .readiness-section { padding-top: 1rem; }
+
+    .readiness-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .75rem;
+    }
+
+    .readiness-section-label {
+      font-size: .78rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--mid);
+    }
+
+    .readiness-pill {
+      font-size: .78rem;
+      font-weight: 600;
+      padding: .2rem .65rem;
+      border-radius: 999px;
+    }
+
+    .readiness-pill.ready {
+      background: var(--green-bg);
+      color: var(--green);
+      border: 1px solid var(--green-bd);
+    }
+
+    .readiness-pill.waiting {
+      background: var(--warm);
+      color: var(--mid);
+      border: 1px solid var(--border);
+    }
+
+    .readiness-banner {
+      padding: .6rem .85rem;
+      border-radius: 8px;
+      font-size: .84rem;
+      font-weight: 500;
+      margin-bottom: .75rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .readiness-banner.is-ready {
+      background: var(--green-bg);
+      border: 1px solid var(--green-bd);
+      color: var(--green);
+    }
+
+    .readiness-banner.is-waiting {
+      background: var(--warm);
+      border: 1px solid var(--border);
+      color: var(--mid);
+    }
+
+    .readiness-list {
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+
+    .readiness-row {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .55rem .75rem;
+      border-radius: 10px;
+      background: var(--cream);
+      transition: background .15s;
+    }
+
+    .readiness-av {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      background: var(--warm);
+      color: var(--mid);
+      font-size: .72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background .2s, color .2s;
+      border: 1.5px solid var(--border);
+    }
+
+    .readiness-av.done {
+      background: var(--green-bg);
+      color: var(--green);
+      border-color: var(--green-bd);
+    }
+
+    .readiness-info { flex: 1; min-width: 0; }
+
+    .readiness-name {
+      font-size: .88rem;
+      font-weight: 500;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .readiness-courses-text {
+      font-size: .76rem;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    .readiness-courses-text.has { color: var(--green); }
+    .readiness-courses-text.none { color: var(--mid); font-style: italic; }
+
+    .readiness-check-icon {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .readiness-check-icon.done { background: var(--green); }
+    .readiness-check-icon.pending {
+      border: 1.5px solid var(--border);
+      background: transparent;
+    }
 
     /* ── Two-column layout for detail view ───────── */
     .detail-columns {
@@ -637,7 +968,6 @@
       opacity: .7;
     }
 
-    /* Message wrapper */
     .msg {
       display: flex;
       gap: .75rem;
@@ -645,11 +975,8 @@
       margin-bottom: .4rem;
     }
 
-    .msg.mine {
-      flex-direction: row-reverse;
-    }
+    .msg.mine { flex-direction: row-reverse; }
 
-    /* Message Avatar */
     .msg-avatar {
       width: 32px; height: 32px;
       border-radius: 50%;
@@ -664,9 +991,7 @@
       align-self: flex-end;
     }
 
-    .msg.mine .msg-avatar {
-      display: none;
-    }
+    .msg.mine .msg-avatar { display: none; }
 
     .msg-content {
       display: flex;
@@ -686,10 +1011,7 @@
       gap: .4rem;
     }
 
-    .msg-author {
-      font-weight: 600;
-      color: var(--charcoal);
-    }
+    .msg-author { font-weight: 600; color: var(--charcoal); }
 
     .msg-bubble {
       padding: .65rem .9rem;
@@ -713,7 +1035,6 @@
       border-bottom-left-radius: 4px;
     }
 
-    /* Chat input bar */
     .chat-input-bar {
       display: flex;
       gap: .5rem;
@@ -790,13 +1111,24 @@
     }
 
     .spinner {
-      width: 18px; height: 18px;
-      border: 2px solid rgba(255,255,255,.3);
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,.35);
       border-top-color: white;
       border-radius: 50%;
       animation: spin .6s linear infinite;
       display: inline-block;
+      vertical-align: middle;
     }
+
+    .spinner-sm {
+      width: 12px; height: 12px;
+      border: 1.5px solid rgba(122,111,101,.35);
+      border-top-color: var(--mid);
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      display: inline-block;
+    }
+
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
@@ -922,7 +1254,6 @@
             </span>
           </div>
         </div>
-        <!-- Leave group button — hidden for owner -->
         <button class="btn-leave" id="leave-btn" onclick="openLeaveModal()" style="display:none">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M5 7h7M9 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -930,13 +1261,66 @@
           </svg>
           Leave group
         </button>
-        <!-- Delete group button — hidden for non-owners -->
         <button class="btn-leave" id="delete-btn" onclick="openDeleteModal()" style="display:none">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M3 3.5h8M5.5 3.5v-1a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v1M4.5 3.5v8a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
           Delete group
         </button>
+      </div>
+
+      <!-- ── Courses Card ─────────────────────────── -->
+      <div class="courses-card">
+        <div class="courses-card-top">
+          <div>
+            <div class="courses-card-label">Your courses</div>
+            <div class="courses-card-sub">Add the UNSW courses you're enrolled in this term</div>
+          </div>
+          <button class="btn-save-courses" id="save-courses-btn" onclick="saveCourses()" style="display:none">
+            Save
+          </button>
+        </div>
+
+        <!-- Search combobox -->
+        <div class="course-search-wrap">
+          <svg class="course-search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M9.5 9.5l3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          <input
+            class="course-search-input"
+            id="course-search"
+            type="text"
+            placeholder="Type a course code to add… (e.g. COMP3900)"
+            autocomplete="off"
+            oninput="onCourseInput()"
+            onkeydown="onCourseKeydown(event)"
+            onblur="scheduleDdClose()"
+            onfocus="onCourseInput()"
+          />
+          <div class="course-search-loading" id="courses-loading" style="display:none">
+            <span class="spinner-sm"></span>
+          </div>
+          <div class="course-dropdown" id="course-dropdown"></div>
+        </div>
+
+        <!-- Selected course chips -->
+        <div class="course-chips" id="course-chips">
+          <span class="no-courses-hint" id="no-courses-hint">No courses added yet</span>
+        </div>
+
+        <!-- ── Readiness panel ──────────────────── -->
+        <div class="readiness-divider"></div>
+        <div class="readiness-section">
+          <div class="readiness-top">
+            <span class="readiness-section-label">Group readiness</span>
+            <span class="readiness-pill waiting" id="readiness-pill">0/0</span>
+          </div>
+          <div id="readiness-banner" class="readiness-banner is-waiting" style="display:none"></div>
+          <div class="readiness-list" id="readiness-list">
+            <div style="color:var(--mid);font-size:.85rem">Loading…</div>
+          </div>
+        </div>
       </div>
 
       <!-- Members + Chat side by side -->
@@ -980,7 +1364,6 @@
 <!-- ── Modals ─────────────────────────────────────────────────────────────── -->
 <div id="modal-backdrop" class="modal-backdrop" style="display:none" onclick="closeModal(event)">
 
-  <!-- Create -->
   <div id="modal-create" class="modal" style="display:none">
     <h3>New group</h3>
     <p>Give your friend group a name. You'll get an invite code to share.</p>
@@ -995,7 +1378,6 @@
     </div>
   </div>
 
-  <!-- Join -->
   <div id="modal-join" class="modal" style="display:none">
     <h3>Join a group</h3>
     <p>Ask a friend for their 8-character invite code.</p>
@@ -1012,7 +1394,6 @@
     </div>
   </div>
 
-  <!-- Leave confirmation -->
   <div id="modal-leave" class="modal" style="display:none">
     <h3>Leave group?</h3>
     <p>You'll lose access to the group chat and won't see new activity. You can rejoin later with the invite code.</p>
@@ -1022,7 +1403,6 @@
     </div>
   </div>
 
-  <!-- Delete confirmation -->
   <div id="modal-delete" class="modal" style="display:none">
     <h3>Delete group?</h3>
     <p>This will permanently remove the group and all its messages. This cannot be undone.</p>
@@ -1034,16 +1414,28 @@
 
 </div>
 
-<!-- Toast -->
 <div id="toast" class="toast"></div>
 
 <script>
-  const API = 'http://localhost:8000';
-  let token = localStorage.getItem('insync_token');
+  const API       = 'http://localhost:8000';
+  const DEVSOC    = 'https://graphql.csesoc.app/v1/graphql';
+
+  let token       = localStorage.getItem('insync_token');
   let currentUser = JSON.parse(localStorage.getItem('insync_user') || 'null');
   let currentGroupId = null;
-  let chatPollInterval = null;
-  let lastMessageTime = null; // ISO string of newest message we have
+
+  // ── Chat state ────────────────────────────────────
+  let chatPollInterval  = null;
+  let lastMessageTime   = null;
+
+  // ── Course state ──────────────────────────────────
+  let allCourseCodes    = [];   // fetched once from DevSoc
+  let coursesFetched    = false;
+  let myCourses         = new Set(); // live local state (may have unsaved changes)
+  let savedCourses      = new Set(); // last-saved state from backend
+  let coursesInitialised = false;
+  let ddHighlight       = -1;   // dropdown keyboard highlight index
+  let coursePollInterval = null;
 
   // ── Boot ──────────────────────────────────────────
   if (token && currentUser) showApp();
@@ -1052,16 +1444,16 @@
   function switchTab(tab) {
     document.querySelectorAll('.auth-tab').forEach((t, i) =>
       t.classList.toggle('active', (tab === 'login') === (i === 0)));
-    document.getElementById('login-form').style.display = tab === 'login' ? '' : 'none';
+    document.getElementById('login-form').style.display  = tab === 'login'    ? '' : 'none';
     document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
-    document.getElementById('auth-error').style.display = 'none';
+    document.getElementById('auth-error').style.display  = 'none';
   }
 
   // ── API helper ────────────────────────────────────
   async function api(path, opts = {}) {
     const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
     if (token) headers['Authorization'] = `Bearer ${token}`;
-    const res = await fetch(API + path, { ...opts, headers });
+    const res  = await fetch(API + path, { ...opts, headers });
     if (res.status === 204) return null;
     const data = await res.json();
     if (!res.ok) throw new Error(data.detail || 'Something went wrong');
@@ -1078,7 +1470,7 @@
     btn.innerHTML = '<span class="spinner"></span>';
     try {
       const form = new URLSearchParams({ username: email, password: pass });
-      const res = await fetch(API + '/auth/login', {
+      const res  = await fetch(API + '/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: form,
@@ -1118,7 +1510,7 @@
   }
 
   function saveAuth(data) {
-    token = data.access_token;
+    token       = data.access_token;
     currentUser = data.user;
     localStorage.setItem('insync_token', token);
     localStorage.setItem('insync_user', JSON.stringify(currentUser));
@@ -1126,22 +1518,22 @@
   }
 
   function logout() {
-    stopChatPoll();
-    token = null;
+    stopPolling();
+    token       = null;
     currentUser = null;
     localStorage.removeItem('insync_token');
     localStorage.removeItem('insync_user');
-    document.getElementById('app').style.display = 'none';
+    document.getElementById('app').style.display    = 'none';
     document.getElementById('landing').style.display = 'flex';
   }
 
   // ── App ───────────────────────────────────────────
   function showApp() {
     document.getElementById('landing').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    const initials = currentUser.display_name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    document.getElementById('app').style.display     = 'flex';
+    const initials = currentUser.display_name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
     document.getElementById('nav-avatar').textContent = initials;
-    document.getElementById('nav-name').textContent = currentUser.display_name;
+    document.getElementById('nav-name').textContent   = currentUser.display_name;
     loadGroups();
   }
 
@@ -1192,24 +1584,32 @@
 
   // ── Group Detail ──────────────────────────────────
   async function openGroup(id) {
-    stopChatPoll();
-    currentGroupId = id;
-    lastMessageTime = null;
+    stopPolling();
+    currentGroupId      = id;
+    lastMessageTime     = null;
+    coursesInitialised  = false;
+    myCourses           = new Set();
+    savedCourses        = new Set();
 
-    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('dashboard').style.display    = 'none';
     document.getElementById('group-detail').style.display = 'block';
-    document.getElementById('member-list').innerHTML = '<div style="color:var(--mid);font-size:.9rem">Loading…</div>';
+    document.getElementById('member-list').innerHTML      = '<div style="color:var(--mid);font-size:.9rem">Loading…</div>';
+    document.getElementById('readiness-list').innerHTML   = '<div style="color:var(--mid);font-size:.85rem">Loading…</div>';
+    document.getElementById('save-courses-btn').style.display = 'none';
 
     // Clear chat
     const chatEl = document.getElementById('chat-messages');
     chatEl.querySelectorAll('.msg').forEach(el => el.remove());
     document.getElementById('chat-empty').style.display = 'flex';
 
+    // Reset course chips
+    renderCourseChips();
+
     try {
       const g = await api(`/groups/${id}`);
-      document.getElementById('detail-name').textContent = g.name;
+      document.getElementById('detail-name').textContent         = g.name;
       document.getElementById('detail-member-count').textContent = `${g.member_count} member${g.member_count !== 1 ? 's' : ''}`;
-      document.getElementById('detail-code').textContent = g.invite_code;
+      document.getElementById('detail-code').textContent         = g.invite_code;
 
       document.getElementById('member-list').innerHTML = g.members.map(m => `
         <div class="member-row">
@@ -1221,30 +1621,44 @@
           ${m.id === g.owner_id ? '<span class="owner-badge">owner</span>' : ''}
         </div>`).join('');
 
-      // Show leave button only for non-owners, delete button for owners
-      const leaveBtn = document.getElementById('leave-btn');
+      const leaveBtn  = document.getElementById('leave-btn');
       const deleteBtn = document.getElementById('delete-btn');
       if (currentUser.id === g.owner_id) {
-        leaveBtn.style.display = 'none';
+        leaveBtn.style.display  = 'none';
         deleteBtn.style.display = 'inline-flex';
       } else {
-        leaveBtn.style.display = 'inline-flex';
+        leaveBtn.style.display  = 'inline-flex';
         deleteBtn.style.display = 'none';
       }
 
-      // Load initial messages then start polling
+      // Start chat
       await loadMessages();
       startChatPoll();
+
+      // Fetch courses in parallel (non-blocking for DevSoc)
+      fetchAllCourseCodes(); // fire-and-forget
+      await loadGroupCourses();
+      startCoursePoll();
+
     } catch (e) {
       document.getElementById('member-list').innerHTML = `<div class="error-msg">${e.message}</div>`;
     }
   }
 
   function showDashboard() {
-    stopChatPoll();
+    stopPolling();
     document.getElementById('group-detail').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
+    document.getElementById('dashboard').style.display    = 'block';
     loadGroups();
+  }
+
+  // ── Polling control ───────────────────────────────
+  function startChatPoll()   { chatPollInterval   = setInterval(loadMessages,     3000); }
+  function startCoursePoll() { coursePollInterval = setInterval(loadGroupCourses, 10000); }
+
+  function stopPolling() {
+    if (chatPollInterval)   { clearInterval(chatPollInterval);   chatPollInterval   = null; }
+    if (coursePollInterval) { clearInterval(coursePollInterval); coursePollInterval = null; }
   }
 
   // ── Chat ──────────────────────────────────────────
@@ -1253,28 +1667,21 @@
       const messages = await api(`/groups/${currentGroupId}/messages?limit=50`);
       if (!messages || messages.length === 0) return;
 
-      const chatEl = document.getElementById('chat-messages');
+      const chatEl  = document.getElementById('chat-messages');
       const emptyEl = document.getElementById('chat-empty');
-
-      // Remove empty state
       emptyEl.style.display = 'none';
 
-      // Clear and re-render all (initial load)
       if (!lastMessageTime) {
         chatEl.querySelectorAll('.msg').forEach(el => el.remove());
         messages.forEach(m => appendMessage(m, false));
         scrollToBottom();
       } else {
-        // Only append messages newer than what we have
         const newMessages = messages.filter(m => m.created_at > lastMessageTime);
         newMessages.forEach(m => appendMessage(m, true));
       }
 
-      if (messages.length > 0) {
-        lastMessageTime = messages[messages.length - 1].created_at;
-      }
+      if (messages.length > 0) lastMessageTime = messages[messages.length - 1].created_at;
     } catch (e) {
-      // Silently fail on poll errors — don't disrupt the user
       console.warn('Chat poll error:', e.message);
     }
   }
@@ -1282,8 +1689,7 @@
   function appendMessage(msg, scroll) {
     const chatEl = document.getElementById('chat-messages');
     const isMine = msg.user_id === currentUser.id;
-
-    const time = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const time   = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const initials = (msg.display_name || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
 
     const div = document.createElement('div');
@@ -1296,10 +1702,8 @@
           <span>${time}</span>
         </div>
         <div class="msg-bubble">${esc(msg.content)}</div>
-      </div>
-    `;
+      </div>`;
     chatEl.appendChild(div);
-
     if (scroll) scrollToBottom();
   }
 
@@ -1309,7 +1713,7 @@
   }
 
   async function sendMessage() {
-    const input = document.getElementById('chat-input');
+    const input   = document.getElementById('chat-input');
     const content = input.value.trim();
     if (!content) return;
 
@@ -1322,13 +1726,11 @@
         method: 'POST',
         body: JSON.stringify({ content }),
       });
-
-      // Append immediately without waiting for poll
       document.getElementById('chat-empty').style.display = 'none';
       appendMessage(msg, true);
       lastMessageTime = msg.created_at;
     } catch (e) {
-      input.value = content; // Restore on failure
+      input.value = content;
       showToast('Failed to send: ' + e.message);
     } finally {
       sendBtn.disabled = false;
@@ -1336,24 +1738,239 @@
     }
   }
 
-  function startChatPoll() {
-    chatPollInterval = setInterval(loadMessages, 3000);
+  // ── Course: DevSoc fetch ──────────────────────────
+  async function fetchAllCourseCodes() {
+    if (coursesFetched) return;
+    document.getElementById('courses-loading').style.display = '';
+    try {
+      const res  = await fetch(DEVSOC, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: '{ courses { course_code } }' }),
+      });
+      const json = await res.json();
+      allCourseCodes = [...new Set(json.data.courses.map(c => c.course_code))].sort();
+      coursesFetched = true;
+    } catch (e) {
+      console.warn('DevSoc fetch failed:', e);
+    } finally {
+      document.getElementById('courses-loading').style.display = 'none';
+    }
   }
 
-  function stopChatPoll() {
-    if (chatPollInterval) {
-      clearInterval(chatPollInterval);
-      chatPollInterval = null;
+  // ── Course: dropdown combobox ─────────────────────
+  function onCourseInput() {
+    const val = document.getElementById('course-search').value.trim().toUpperCase();
+    const dd  = document.getElementById('course-dropdown');
+    ddHighlight = -1;
+
+    if (val.length < 2) { dd.style.display = 'none'; return; }
+
+    // Starts-with first, then contains
+    const starts   = allCourseCodes.filter(c => c.startsWith(val) && !myCourses.has(c));
+    const contains = allCourseCodes.filter(c => !c.startsWith(val) && c.includes(val) && !myCourses.has(c));
+    const results  = [...starts, ...contains].slice(0, 8);
+
+    if (!results.length) {
+      dd.innerHTML    = `<div class="course-dropdown-empty">No matches for "${esc(val)}"</div>`;
+      dd.style.display = 'block';
+      return;
     }
+
+    dd.innerHTML = results.map((code, i) => {
+      const idx = code.indexOf(val);
+      const before = esc(code.slice(0, idx));
+      const match  = esc(code.slice(idx, idx + val.length));
+      const after  = esc(code.slice(idx + val.length));
+      return `<div class="course-dropdown-item" data-code="${esc(code)}" data-idx="${i}"
+                   onmousedown="addCourse('${esc(code)}')"
+                   onmouseover="setDdHighlight(${i})">
+                ${before}<span class="match">${match}</span>${after}
+              </div>`;
+    }).join('');
+    dd.style.display = 'block';
+  }
+
+  function onCourseKeydown(e) {
+    const dd    = document.getElementById('course-dropdown');
+    const items = dd.querySelectorAll('.course-dropdown-item');
+    if (!items.length) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setDdHighlight(Math.min(ddHighlight + 1, items.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setDdHighlight(Math.max(ddHighlight - 1, 0));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (ddHighlight >= 0 && items[ddHighlight]) {
+        const code = items[ddHighlight].dataset.code;
+        if (code) addCourse(code);
+      }
+    } else if (e.key === 'Escape') {
+      dd.style.display = 'none';
+    }
+  }
+
+  function setDdHighlight(idx) {
+    ddHighlight = idx;
+    document.querySelectorAll('.course-dropdown-item').forEach((el, i) =>
+      el.classList.toggle('hi', i === idx));
+  }
+
+  function scheduleDdClose() {
+    // Delay so mousedown on a dropdown item fires first
+    setTimeout(() => {
+      document.getElementById('course-dropdown').style.display = 'none';
+    }, 160);
+  }
+
+  // ── Course: add / remove ──────────────────────────
+  function addCourse(code) {
+    myCourses.add(code);
+    document.getElementById('course-search').value = '';
+    document.getElementById('course-dropdown').style.display = 'none';
+    ddHighlight = -1;
+    renderCourseChips();
+  }
+
+  function removeCourse(code) {
+    myCourses.delete(code);
+    renderCourseChips();
+  }
+
+  function setsEqual(a, b) {
+    if (a.size !== b.size) return false;
+    for (const x of a) if (!b.has(x)) return false;
+    return true;
+  }
+
+  function renderCourseChips() {
+    const container = document.getElementById('course-chips');
+    const hint      = document.getElementById('no-courses-hint');
+    const saveBtn   = document.getElementById('save-courses-btn');
+
+    // Remove existing chips (leave the hint span in place)
+    container.querySelectorAll('.course-chip').forEach(el => el.remove());
+
+    if (myCourses.size === 0) {
+      hint.style.display = '';
+    } else {
+      hint.style.display = 'none';
+      [...myCourses].sort().forEach(code => {
+        const chip = document.createElement('span');
+        chip.className   = 'course-chip';
+        chip.innerHTML   = `${esc(code)}<button class="chip-remove" onmousedown="removeCourse('${esc(code)}')" title="Remove">×</button>`;
+        container.insertBefore(chip, hint);
+      });
+    }
+
+    // Show Save button only when there are unsaved changes
+    if (saveBtn) saveBtn.style.display = setsEqual(myCourses, savedCourses) ? 'none' : '';
+  }
+
+  // ── Course: save to backend ───────────────────────
+  async function saveCourses() {
+    const btn = document.getElementById('save-courses-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>';
+    try {
+      await api(`/groups/${currentGroupId}/my-courses`, {
+        method: 'PUT',
+        body: JSON.stringify({ course_codes: [...myCourses] }),
+      });
+      savedCourses = new Set(myCourses);
+      renderCourseChips();
+      showToast('Courses saved!');
+      await loadGroupCourses(); // refresh readiness immediately
+    } catch (e) {
+      showToast('Failed to save: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Save';
+    }
+  }
+
+  // ── Course: load group readiness ──────────────────
+  async function loadGroupCourses() {
+    try {
+      const data = await api(`/groups/${currentGroupId}/courses`);
+      renderReadiness(data);
+
+      // On first load, hydrate myCourses from saved state
+      if (!coursesInitialised) {
+        const me = data.members.find(m => String(m.user_id) === String(currentUser.id));
+        if (me && me.course_codes.length > 0) {
+          savedCourses = new Set(me.course_codes);
+          myCourses    = new Set(savedCourses);
+          renderCourseChips();
+        }
+        coursesInitialised = true;
+      }
+    } catch (e) {
+      console.warn('Group courses fetch error:', e);
+    }
+  }
+
+  function renderReadiness(data) {
+    const { members, ready_count, total_count, is_ready } = data;
+
+    // Pill
+    const pill = document.getElementById('readiness-pill');
+    pill.textContent  = `${ready_count}/${total_count}`;
+    pill.className    = `readiness-pill ${is_ready ? 'ready' : 'waiting'}`;
+
+    // Banner
+    const banner = document.getElementById('readiness-banner');
+    if (total_count < 2) {
+      banner.style.display = 'none';
+    } else {
+      banner.style.display = '';
+      if (is_ready) {
+        banner.className  = 'readiness-banner is-ready';
+        banner.innerHTML  = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-6" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          ${ready_count} member${ready_count !== 1 ? 's' : ''} synced — ready to find your windows!`;
+      } else {
+        const needed = 2 - ready_count;
+        banner.className = 'readiness-banner is-waiting';
+        banner.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="var(--mid)" stroke-width="1.4"/><path d="M7 4v3l2 1.5" stroke="var(--mid)" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Waiting for ${needed > 0 ? needed + ' more member' + (needed > 1 ? 's' : '') : 'everyone'} to add their courses`;
+      }
+    }
+
+    // Member rows
+    const list = document.getElementById('readiness-list');
+    list.innerHTML = members.map(m => {
+      const hasCourses = m.course_codes.length > 0;
+      const initials   = m.display_name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+      const coursesText = hasCourses
+        ? m.course_codes.join(', ')
+        : 'No courses added yet';
+
+      return `
+        <div class="readiness-row">
+          <div class="readiness-av ${hasCourses ? 'done' : ''}">${initials}</div>
+          <div class="readiness-info">
+            <span class="readiness-name">${esc(m.display_name)}</span>
+            <span class="readiness-courses-text ${hasCourses ? 'has' : 'none'}">${esc(coursesText)}</span>
+          </div>
+          <div class="readiness-check-icon ${hasCourses ? 'done' : 'pending'}">
+            ${hasCourses
+              ? `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+              : ''}
+          </div>
+        </div>`;
+    }).join('');
   }
 
   // ── Leave Group ───────────────────────────────────
   function openLeaveModal() {
     document.getElementById('modal-backdrop').style.display = 'flex';
-    document.getElementById('modal-leave').style.display = 'block';
-    document.getElementById('modal-create').style.display = 'none';
-    document.getElementById('modal-join').style.display = 'none';
-    document.getElementById('modal-delete').style.display = 'none';
+    document.getElementById('modal-leave').style.display   = 'block';
+    document.getElementById('modal-create').style.display  = 'none';
+    document.getElementById('modal-join').style.display    = 'none';
+    document.getElementById('modal-delete').style.display  = 'none';
   }
 
   async function doLeave() {
@@ -1376,10 +1993,10 @@
   // ── Delete Group ──────────────────────────────────
   function openDeleteModal() {
     document.getElementById('modal-backdrop').style.display = 'flex';
-    document.getElementById('modal-delete').style.display = 'block';
-    document.getElementById('modal-create').style.display = 'none';
-    document.getElementById('modal-join').style.display = 'none';
-    document.getElementById('modal-leave').style.display = 'none';
+    document.getElementById('modal-delete').style.display  = 'block';
+    document.getElementById('modal-create').style.display  = 'none';
+    document.getElementById('modal-join').style.display    = 'none';
+    document.getElementById('modal-leave').style.display   = 'none';
   }
 
   async function doDeleteGroup() {
@@ -1402,9 +2019,9 @@
   // ── Create modal ──────────────────────────────────
   function openCreateModal() {
     document.getElementById('modal-backdrop').style.display = 'flex';
-    document.getElementById('modal-create').style.display = 'block';
-    document.getElementById('modal-join').style.display = 'none';
-    document.getElementById('modal-leave').style.display = 'none';
+    document.getElementById('modal-create').style.display  = 'block';
+    document.getElementById('modal-join').style.display    = 'none';
+    document.getElementById('modal-leave').style.display   = 'none';
     setTimeout(() => document.getElementById('create-name').focus(), 50);
   }
 
@@ -1431,10 +2048,10 @@
   // ── Join modal ────────────────────────────────────
   function openJoinModal() {
     document.getElementById('modal-backdrop').style.display = 'flex';
-    document.getElementById('modal-join').style.display = 'block';
-    document.getElementById('modal-create').style.display = 'none';
-    document.getElementById('modal-leave').style.display = 'none';
-    document.getElementById('join-error').style.display = 'none';
+    document.getElementById('modal-join').style.display    = 'block';
+    document.getElementById('modal-create').style.display  = 'none';
+    document.getElementById('modal-leave').style.display   = 'none';
+    document.getElementById('join-error').style.display    = 'none';
     setTimeout(() => document.getElementById('join-code').focus(), 50);
   }
 
@@ -1452,7 +2069,7 @@
       loadGroups();
     } catch (e) {
       const el = document.getElementById('join-error');
-      el.textContent = e.message;
+      el.textContent   = e.message;
       el.style.display = 'block';
     } finally {
       btn.disabled = false;
@@ -1471,9 +2088,7 @@
       document.getElementById(id).style.display = 'none');
   }
 
-  function copyInviteCode() {
-    copyCode(document.getElementById('detail-code').textContent);
-  }
+  function copyInviteCode() { copyCode(document.getElementById('detail-code').textContent); }
 
   function copyCode(code) {
     navigator.clipboard.writeText(code).then(() => showToast('Invite code copied!'));
@@ -1481,7 +2096,7 @@
 
   function showError(id, msg) {
     const el = document.getElementById(id);
-    el.textContent = msg;
+    el.textContent   = msg;
     el.style.display = 'block';
   }
 
@@ -1494,10 +2109,10 @@
 
   function esc(str) {
     return String(str)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;');
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
   }
 </script>
 </body>
