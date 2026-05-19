@@ -514,6 +514,49 @@ async def delete_group(group_id: UUID, current_user: User = Depends(get_current_
         await session.commit()
 
 
+@app.delete("/groups/{group_id}/members/{user_id}", status_code=204)
+async def remove_member(group_id: UUID, user_id: UUID, current_user: User = Depends(get_current_user)):
+    async with async_session() as session:
+        result = await session.execute(select(Group).where(Group.id == group_id))
+        group = result.scalar_one_or_none()
+        if not group:
+            raise HTTPException(status_code=404, detail="Group not found")
+
+        if group.owner_id != current_user.id:
+            raise HTTPException(status_code=403, detail="Only the owner can remove members")
+
+        if group.owner_id == user_id:
+            raise HTTPException(status_code=400, detail="Cannot remove the owner")
+
+        # Remove member
+        res = await session.execute(
+            group_members.delete().where(
+                group_members.c.user_id == user_id,
+                group_members.c.group_id == group_id,
+            )
+        )
+        if res.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Member not found in group")
+
+        # Delete course selections
+        await session.execute(
+            delete(UserGroupCourse).where(
+                UserGroupCourse.user_id == user_id,
+                UserGroupCourse.group_id == group_id,
+            )
+        )
+
+        # Invalidate timetable
+        existing_tt = await session.execute(
+            select(GroupTimetable).where(GroupTimetable.group_id == group_id)
+        )
+        tt = existing_tt.scalar_one_or_none()
+        if tt:
+            tt.invalidated = True
+
+        await session.commit()
+
+
 # ── Chat Routes ───────────────────────────────────────────────────────────────
 
 

@@ -27,7 +27,6 @@
     html, body { height: 100%; }
     body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); min-height: 100vh; }
 
-    /* ── Landing ──────────────────────────────────── */
     #landing { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem; position:relative; overflow:hidden; }
     #landing::before { content:''; position:absolute; inset:0; background: radial-gradient(ellipse 60% 50% at 80% 20%, rgba(196,113,74,.18) 0%, transparent 60%), radial-gradient(ellipse 40% 40% at 10% 80%, rgba(74,124,89,.12) 0%, transparent 55%); pointer-events:none; }
     .landing-inner { max-width:520px; width:100%; text-align:center; position:relative; animation:fadeUp .7s ease both; }
@@ -49,7 +48,6 @@
     .btn-primary:disabled { opacity:.6; cursor:not-allowed; transform:none; }
     .error-msg { background:#FEF0EC; border:1px solid #F5C6B5; color:#9B3D1F; padding:.6rem .9rem; border-radius:8px; font-size:.85rem; margin-bottom:1rem; }
 
-    /* ── App Shell ────────────────────────────────── */
     #app { display:none; min-height:100vh; flex-direction:column; }
     nav { background:white; border-bottom:1px solid var(--border); padding:0 2rem; height:60px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; }
     .nav-logo { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:var(--charcoal); display:flex; align-items:center; gap:.5rem; }
@@ -61,7 +59,6 @@
     .btn-ghost { padding:.4rem .9rem; background:transparent; border:1.5px solid var(--border); border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:500; color:var(--mid); cursor:pointer; transition:all .15s; }
     .btn-ghost:hover { border-color:var(--charcoal); color:var(--charcoal); }
 
-    /* ── Dashboard ────────────────────────────────── */
     main { flex:1; padding:2.5rem 2rem; max-width:960px; margin:0 auto; width:100%; }
     .page-header { margin-bottom:2rem; animation:fadeUp .4s ease both; }
     .page-header h2 { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; margin-bottom:.25rem; }
@@ -86,7 +83,6 @@
     .empty-state h3 { font-family:'Playfair Display',serif; font-size:1.3rem; margin-bottom:.5rem; }
     .empty-state p { color:var(--mid); font-size:.9rem; }
 
-    /* ── Modal ────────────────────────────────────── */
     .modal-backdrop { position:fixed; inset:0; background:rgba(44,40,37,.4); backdrop-filter:blur(4px); z-index:100; display:flex; align-items:center; justify-content:center; padding:1rem; animation:fadein .15s ease; }
     .modal { background:white; border-radius:16px; padding:2rem; width:100%; max-width:420px; box-shadow:0 24px 64px rgba(44,40,37,.15); animation:slideUp .2s ease; }
     .modal h3 { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:700; margin-bottom:.4rem; }
@@ -98,7 +94,6 @@
     .btn-danger:hover { background:#A93226; }
     .btn-danger:disabled { opacity:.6; cursor:not-allowed; }
 
-    /* ── Group Detail ─────────────────────────────── */
     #group-detail { display:none; }
     .back-btn { display:inline-flex; align-items:center; gap:.4rem; font-size:.88rem; color:var(--mid); cursor:pointer; margin-bottom:1.5rem; padding:.3rem 0; background:none; border:none; font-family:'DM Sans',sans-serif; transition:color .15s; }
     .back-btn:hover { color:var(--charcoal); }
@@ -107,7 +102,6 @@
     .btn-leave { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem .9rem; background:transparent; border:1.5px solid #E8B4AC; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.85rem; font-weight:500; color:#C0392B; cursor:pointer; transition:all .15s; white-space:nowrap; flex-shrink:0; }
     .btn-leave:hover { background:#FEF0EC; border-color:#C0392B; }
 
-    /* ── Courses Card ─────────────────────────────── */
     .courses-card { background:white; border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1.5rem; animation:fadeUp .35s ease both; }
     .courses-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
     .courses-card-label { font-size:.78rem; font-weight:500; text-transform:uppercase; letter-spacing:.08em; color:var(--mid); margin-bottom:.2rem; }
@@ -132,7 +126,6 @@
     .chip-remove:hover { color:#C0392B; }
     .no-courses-hint { font-size:.85rem; color:var(--mid); font-style:italic; }
 
-    /* ── Readiness ────────────────────────────────── */
     .readiness-divider { height:1px; background:var(--border); margin:1rem -1.5rem; }
     .readiness-section { padding-top:1rem; }
     .readiness-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:.75rem; }
@@ -156,7 +149,6 @@
     .readiness-check-icon.done { background:var(--green); }
     .readiness-check-icon.pending { border:1.5px solid var(--border); background:transparent; }
 
-    /* ── Two-column layout ────────────────────────── */
     .detail-columns { display:grid; grid-template-columns:1fr 1.5fr; gap:1.5rem; align-items:start; }
     @media(max-width:680px) { .detail-columns { grid-template-columns:1fr; } }
     .members-section h4,.chat-section h4 { font-size:.8rem; font-weight:500; text-transform:uppercase; letter-spacing:.08em; color:var(--mid); margin-bottom:1rem; }
@@ -167,8 +159,11 @@
     .member-name { font-weight:500; font-size:.95rem; }
     .member-email { font-size:.8rem; color:var(--mid); }
     .owner-badge { font-size:.72rem; background:#FEF0EC; color:var(--clay); border:1px solid #F5C6B5; border-radius:999px; padding:.15rem .55rem; font-weight:500; }
+    
+    /* NEW: Remove member button */
+    .btn-kick { background:none; border:none; cursor:pointer; color:var(--mid); font-size:1.2rem; line-height:1; padding:0 4px; display:inline-flex; align-items:center; transition:color .1s; margin-left:auto; }
+    .btn-kick:hover { color:#C0392B; }
 
-    /* ── Chat ─────────────────────────────────────── */
     .chat-section { background:white; border:1px solid var(--border); border-radius:14px; display:flex; flex-direction:column; height:480px; }
     .chat-section h4 { padding:1rem 1.1rem .75rem; border-bottom:1px solid var(--border); margin-bottom:0; }
     .chat-messages { flex:1; overflow-y:auto; padding:1rem 1.1rem; display:flex; flex-direction:column; gap:.6rem; scroll-behavior:smooth; }
@@ -194,30 +189,26 @@
     .chat-send:active { transform:scale(.92); }
     .chat-send:disabled { opacity:.5; cursor:not-allowed; }
 
-    /* ── Sync Card (Algorithm) ────────────────────── */
     .sync-card { background:white; border:1px solid var(--border); border-radius:16px; padding:1.5rem; margin-bottom:1.5rem; animation:fadeUp .4s .1s ease both; }
     .sync-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:1.25rem; }
     .sync-card-label { font-size:.78rem; font-weight:500; text-transform:uppercase; letter-spacing:.08em; color:var(--mid); margin-bottom:.2rem; }
     .sync-card-sub { font-size:.85rem; color:var(--mid); }
-
     .btn-find-windows { display:inline-flex; align-items:center; gap:.45rem; padding:.55rem 1.2rem; background:var(--charcoal); color:white; border:none; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:.88rem; font-weight:500; cursor:pointer; flex-shrink:0; transition:background .15s,transform .1s; box-shadow:0 2px 10px rgba(44,40,37,.2); }
     .btn-find-windows:hover { background:#1a1612; }
     .btn-find-windows:active { transform:scale(.97); }
     .btn-find-windows:disabled { opacity:.55; cursor:not-allowed; transform:none; }
-
     .sync-locked { display:flex; align-items:center; gap:.75rem; padding:1.25rem 1rem; background:var(--cream); border-radius:10px; }
     .sync-locked-icon { width:36px; height:36px; border-radius:50%; background:var(--warm); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .sync-locked p { font-size:.88rem; color:var(--mid); line-height:1.5; }
 
-    /* Algorithm progress */
     .algo-progress { padding:1rem; background:var(--cream); border-radius:10px; }
     .algo-progress-label { font-size:.85rem; color:var(--mid); margin-bottom:.6rem; display:flex; align-items:center; gap:.5rem; }
     .algo-bar-track { background:var(--border); border-radius:999px; height:6px; overflow:hidden; }
     .algo-bar-fill { height:100%; background:var(--clay); border-radius:999px; transition:width .3s ease; }
     .algo-status { font-size:.78rem; color:var(--mid); margin-top:.5rem; font-style:italic; }
 
-    /* Result: timetable grid */
-    .timetable-wrap { overflow-x:auto; margin-top:1.25rem; }
+    /* Timetable */
+    .timetable-wrap { overflow-x:auto; margin-top:1.25rem; position:relative; }
     .timetable { border-collapse:collapse; width:100%; font-size:.78rem; min-width:580px; }
     .timetable th { background:var(--warm); font-weight:500; padding:.4rem .5rem; text-align:center; border:1px solid var(--border); color:var(--mid); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; }
     .timetable td { border:1px solid var(--border); padding:0; height:22px; position:relative; }
@@ -227,12 +218,48 @@
     .slot-free-overlap { background:#4A7C59; opacity:.85; }
     .slot-partial { background:#E8F5EE; }
 
-    /* Legend */
+    /* Slot tooltip */
+    .timetable td.has-tooltip { cursor:pointer; }
+    .timetable td.has-tooltip:hover { filter:brightness(.9); transition:filter .1s; }
+    .slot-tooltip {
+      position:fixed;
+      background:var(--charcoal);
+      color:white;
+      border-radius:10px;
+      padding:.6rem .9rem;
+      font-size:.79rem;
+      line-height:1.6;
+      pointer-events:none;
+      z-index:500;
+      box-shadow:0 8px 28px rgba(44,40,37,.25);
+      max-width:220px;
+      min-width:140px;
+      opacity:0;
+      transform:translateY(6px);
+      transition:opacity .12s ease, transform .12s ease;
+    }
+    .slot-tooltip.visible { opacity:1; transform:translateY(0); }
+    .slot-tooltip-time {
+      font-size:.72rem;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:.07em;
+      color:rgba(255,255,255,.5);
+      margin-bottom:.35rem;
+      padding-bottom:.3rem;
+      border-bottom:1px solid rgba(255,255,255,.12);
+    }
+    .slot-tooltip-row { display:flex; align-items:center; gap:.45rem; padding:.1rem 0; }
+    .slot-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+    .slot-dot.busy { background:#E8856A; }
+    .slot-dot.free { background:#6BBF85; }
+    .slot-name { font-size:.8rem; }
+    .slot-status { font-size:.72rem; color:rgba(255,255,255,.55); margin-left:auto; padding-left:.4rem; }
+
     .timetable-legend { display:flex; gap:1rem; margin-top:.75rem; flex-wrap:wrap; }
     .legend-item { display:flex; align-items:center; gap:.4rem; font-size:.78rem; color:var(--mid); }
     .legend-swatch { width:14px; height:14px; border-radius:3px; border:1px solid var(--border); flex-shrink:0; }
 
-    /* Windows list */
     .windows-list { display:flex; flex-direction:column; gap:.6rem; margin-top:1rem; }
     .window-item { display:flex; align-items:center; gap:.85rem; padding:.75rem 1rem; background:var(--green-bg); border:1px solid var(--green-bd); border-radius:10px; animation:fadeUp .3s ease both; }
     .window-dot { width:10px; height:10px; border-radius:50%; background:var(--green); flex-shrink:0; }
@@ -241,7 +268,6 @@
     .window-dur { font-size:.78rem; color:var(--green); margin-top:1px; }
     .window-empty { font-size:.88rem; color:var(--mid); font-style:italic; padding:.75rem 0; }
 
-    /* Best assignment display */
     .assignment-list { margin-top:1rem; display:flex; flex-direction:column; gap:.5rem; }
     .assignment-person { background:var(--cream); border-radius:10px; padding:.75rem 1rem; }
     .assignment-name { font-weight:600; font-size:.88rem; margin-bottom:.4rem; }
@@ -250,14 +276,11 @@
     .assignment-chip.lec { border-color:#F5C6B5; background:#FEF0EC; color:var(--clay-dk); }
     .assignment-chip.tut { border-color:var(--green-bd); background:var(--green-bg); color:var(--green); }
 
-    /* Score badge */
     .score-badge { display:inline-flex; align-items:center; gap:.4rem; background:var(--charcoal); color:white; border-radius:8px; padding:.35rem .85rem; font-size:.82rem; font-weight:500; margin-bottom:1rem; }
 
-    /* ── Toast ────────────────────────────────────── */
     .toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%) translateY(8px); background:var(--charcoal); color:white; padding:.6rem 1.2rem; border-radius:999px; font-size:.875rem; font-weight:500; opacity:0; transition:opacity .2s,transform .2s; pointer-events:none; z-index:999; white-space:nowrap; }
     .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-    /* ── Animations ───────────────────────────────── */
     @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
     @keyframes fadein { from{opacity:0} to{opacity:1} }
     @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
@@ -265,13 +288,11 @@
     .spinner-sm { width:12px; height:12px; border:1.5px solid rgba(122,111,101,.35); border-top-color:var(--mid); border-radius:50%; animation:spin .6s linear infinite; display:inline-block; }
     .spinner-dark { width:14px; height:14px; border:2px solid rgba(44,40,37,.2); border-top-color:var(--charcoal); border-radius:50%; animation:spin .6s linear infinite; display:inline-block; vertical-align:middle; }
     @keyframes spin { to{transform:rotate(360deg)} }
-
     .section-divider { height:1px; background:var(--border); margin:1.25rem -1.5rem; }
   </style>
 </head>
 <body>
 
-<!-- ── Landing ─────────────────────────────────────────────────────────────── -->
 <div id="landing">
   <div class="landing-inner">
     <div class="logo-mark">
@@ -300,7 +321,6 @@
   </div>
 </div>
 
-<!-- ── App Shell ───────────────────────────────────────────────────────────── -->
 <div id="app">
   <nav>
     <div class="nav-logo">InSync<span class="dot">.</span></div>
@@ -313,7 +333,6 @@
     </div>
   </nav>
   <main>
-    <!-- Dashboard -->
     <div id="dashboard">
       <div class="page-header">
         <h2>Your groups</h2>
@@ -332,7 +351,6 @@
       <div class="groups-grid" id="groups-grid"></div>
     </div>
 
-    <!-- Group Detail -->
     <div id="group-detail">
       <button class="back-btn" onclick="showDashboard()">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -362,7 +380,6 @@
         </div>
       </div>
 
-      <!-- Courses Card -->
       <div class="courses-card">
         <div class="courses-card-top">
           <div>
@@ -391,7 +408,6 @@
         </div>
       </div>
 
-      <!-- ── Sync Card (Algorithm) ─────────────────── -->
       <div class="sync-card">
         <div class="sync-card-top">
           <div>
@@ -413,7 +429,6 @@
         </div>
       </div>
 
-      <!-- Members + Chat -->
       <div class="detail-columns">
         <div class="members-section">
           <h4>Members</h4>
@@ -439,7 +454,6 @@
   </main>
 </div>
 
-<!-- ── Modals ─────────────────────────────────────────────────────────────── -->
 <div id="modal-backdrop" class="modal-backdrop" style="display:none" onclick="closeModal(event)">
   <div id="modal-create" class="modal" style="display:none">
     <h3>New group</h3>
@@ -476,6 +490,21 @@
       <button class="btn-danger" id="delete-confirm-btn" onclick="doDeleteGroup()">Delete group</button>
     </div>
   </div>
+  <!-- Kick Modal -->
+  <div id="modal-kick" class="modal" style="display:none">
+    <h3>Remove member?</h3>
+    <p>Are you sure you want to remove <strong id="kick-member-name"></strong> from the group?</p>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeAllModals()">Cancel</button>
+      <button class="btn-danger" id="kick-confirm-btn" onclick="doKick()">Remove</button>
+    </div>
+  </div>
+</div>
+
+<!-- Shared tooltip element, repositioned on hover -->
+<div id="slot-tooltip" class="slot-tooltip">
+  <div class="slot-tooltip-time" id="slot-tooltip-time"></div>
+  <div id="slot-tooltip-body"></div>
 </div>
 
 <div id="toast" class="toast"></div>
@@ -487,18 +516,22 @@
   const API    = 'http://localhost:8000';
   const DEVSOC = 'https://graphql.csesoc.app/v1/graphql';
 
-  // Mon–Fri, 9:00–20:00, 30-min slots → 22 slots/day × 5 days = 110 slots
-  const DAYS       = ['Mon','Tue','Wed','Thu','Fri'];
-  const SLOT_START = 9 * 2;   // 9:00 in half-hours from midnight
-  const SLOT_END   = 20 * 2;  // 20:00
+  const DAYS          = ['Mon','Tue','Wed','Thu','Fri'];
+  const SLOT_START    = 9 * 2;
+  const SLOT_END      = 20 * 2;
   const SLOTS_PER_DAY = SLOT_END - SLOT_START; // 22
+
+  // DevSoc status values that mean a class is definitely full/closed.
+  // Classes with these statuses are excluded from suggestions.
+  const FULL_STATUSES = new Set(['Full','full','Stop','stop','Closed','closed','Tentative']);
 
   /* ═══════════════════════════════════════════════════════════
      STATE
   ═══════════════════════════════════════════════════════════ */
-  let token       = localStorage.getItem('insync_token');
-  let currentUser = JSON.parse(localStorage.getItem('insync_user') || 'null');
-  let currentGroupId = null;
+  let token              = localStorage.getItem('insync_token');
+  let currentUser        = JSON.parse(localStorage.getItem('insync_user') || 'null');
+  let currentGroupId     = null;
+  let currentGroupData   = null; // kept in sync; used for instant UI updates
   let chatPollInterval   = null;
   let lastMessageTime    = null;
   let allCourseCodes     = [];
@@ -508,10 +541,9 @@
   let coursesInitialised = false;
   let ddHighlight        = -1;
   let coursePollInterval = null;
-  // Algorithm state
   let algoRunning        = false;
   let lastAlgoResult     = null;
-  let groupCoursesData   = null; // latest data from /groups/{id}/courses
+  let groupCoursesData   = null;
 
   /* ═══════════════════════════════════════════════════════════
      BOOT
@@ -626,6 +658,7 @@
     stopPolling();
     currentGroupId=id; lastMessageTime=null; coursesInitialised=false;
     myCourses=new Set(); savedCourses=new Set(); lastAlgoResult=null; groupCoursesData=null;
+    currentGroupData=null;
     document.getElementById('dashboard').style.display='none';
     document.getElementById('group-detail').style.display='block';
     document.getElementById('member-list').innerHTML='<div style="color:var(--mid);font-size:.9rem">Loading…</div>';
@@ -639,15 +672,9 @@
     renderCourseChips();
     try {
       const g=await api(`/groups/${id}`);
-      document.getElementById('detail-name').textContent=g.name;
-      document.getElementById('detail-member-count').textContent=`${g.member_count} member${g.member_count!==1?'s':''}`;
-      document.getElementById('detail-code').textContent=g.invite_code;
-      document.getElementById('member-list').innerHTML=g.members.map(m=>`
-        <div class="member-row">
-          <div class="avatar">${m.display_name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</div>
-          <div class="member-info"><div class="member-name">${esc(m.display_name)}</div><div class="member-email">${esc(m.email)}</div></div>
-          ${m.id===g.owner_id?'<span class="owner-badge">owner</span>':''}
-        </div>`).join('');
+      currentGroupData=g;
+      renderGroupHeader(g);
+      renderMemberList(g);
       const leaveBtn=document.getElementById('leave-btn');
       const deleteBtn=document.getElementById('delete-btn');
       if (currentUser.id===g.owner_id){ leaveBtn.style.display='none'; deleteBtn.style.display='inline-flex'; }
@@ -658,6 +685,23 @@
     } catch(e){
       document.getElementById('member-list').innerHTML=`<div class="error-msg">${e.message}</div>`;
     }
+  }
+
+  function renderGroupHeader(g) {
+    document.getElementById('detail-name').textContent = g.name;
+    const count = g.members ? g.members.length : g.member_count;
+    document.getElementById('detail-member-count').textContent = `${count} member${count!==1?'s':''}`;
+    document.getElementById('detail-code').textContent = g.invite_code;
+  }
+
+  function renderMemberList(g) {
+    document.getElementById('member-list').innerHTML = g.members.map(m=>`
+      <div class="member-row">
+        <div class="avatar">${m.display_name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</div>
+        <div class="member-info"><div class="member-name">${esc(m.display_name)}</div><div class="member-email">${esc(m.email)}</div></div>
+        ${m.id===g.owner_id?'<span class="owner-badge">owner</span>':''}
+        ${currentUser.id===g.owner_id && m.id!==g.owner_id ? `<button class="btn-kick" onclick="openKickModal('${m.id}', this.dataset.name)" data-name="${esc(m.display_name)}" title="Remove member">×</button>` : ''}
+      </div>`).join('');
   }
 
   function showDashboard() {
@@ -869,8 +913,6 @@
   /* ═══════════════════════════════════════════════════════════
      ALGORITHM — DevSoc class fetching
   ═══════════════════════════════════════════════════════════ */
-
-  /** Parse "10:00 - 11:00" → [startSlot, endSlot] in half-hour units from midnight */
   function parseTime(timeStr) {
     const [startStr, endStr] = timeStr.split(' - ');
     const parseHalf = s => {
@@ -880,15 +922,8 @@
     return [parseHalf(startStr), parseHalf(endStr)];
   }
 
-  /** "Mon" → 0, "Tue" → 1, … "Fri" → 4; returns -1 for weekend/unknown */
-  function dayIndex(dayStr) {
-    return DAYS.indexOf(dayStr);
-  }
+  function dayIndex(dayStr) { return DAYS.indexOf(dayStr); }
 
-  /**
-   * Convert a class's times array to a set of busy slot indices.
-   * Each slot = dayIndex * SLOTS_PER_DAY + (halfHour - SLOT_START)
-   */
   function timesToSlots(timesArr) {
     const slots = new Set();
     for (const t of timesArr) {
@@ -897,27 +932,17 @@
       const [start, end] = parseTime(t.time);
       const s = Math.max(start, SLOT_START);
       const e = Math.min(end,   SLOT_END);
-      for (let h = s; h < e; h++) {
-        const idx = d * SLOTS_PER_DAY + (h - SLOT_START);
-        slots.add(idx);
-      }
+      for (let h = s; h < e; h++) slots.add(d * SLOTS_PER_DAY + (h - SLOT_START));
     }
     return slots;
   }
 
-  /**
-   * Fetch all classes for a list of course codes from DevSoc.
-   * Returns: Map<courseCode, Map<activity, Array<{section, times[], slots}>>>
-   */
   async function fetchClassesForCourses(courseCodes) {
     if (!courseCodes.length) return new Map();
     const codeList = courseCodes.map(c => `"${c}"`).join(',');
     const query = `{
       classes(where: {course: {course_code: {_in: [${codeList}]}}}) {
-        class_id
-        section
-        activity
-        status
+        class_id section activity status
         course { course_code }
         times { day time weeks }
       }
@@ -926,10 +951,11 @@
     const json = await res.json();
     const classes = json.data?.classes || [];
 
-    // Group by course → activity → section
-    // Since same section = same class (linked), we use class_id as the key
-    const result = new Map(); // courseCode → Map<activity → Array<{section, slots}>>
+    const result = new Map();
     for (const cls of classes) {
+      const status = (cls.status || '').trim();
+      if (FULL_STATUSES.has(status)) continue;
+
       const code     = cls.course.course_code;
       const activity = cls.activity;
       const section  = cls.section;
@@ -937,32 +963,23 @@
       if (!result.has(code)) result.set(code, new Map());
       const actMap = result.get(code);
       if (!actMap.has(activity)) actMap.set(activity, []);
-      // Deduplicate by section (same section = linked, already merged via times array)
       const existing = actMap.get(activity).find(s => s.section === section);
       if (!existing) {
         actMap.get(activity).push({section, slots, classId: cls.class_id});
       } else {
-        // Merge additional times into existing section's slots
         for (const s of slots) existing.slots.add(s);
       }
     }
     return result;
   }
 
-  /**
-   * Build all valid timetable combinations for one person.
-   * Returns: Array<{busySlots: Set, assignment: Map<"COURSE:activity" → {section}>}>
-   *
-   * For each course, for each activity type, the person must pick exactly one section.
-   * We compute the cartesian product across all (course × activity) choices.
-   *
-   * To keep it tractable we cap at MAX_COMBOS combinations.
-   */
+  /* ═══════════════════════════════════════════════════════════
+     ALGORITHM — Optimisation
+  ═══════════════════════════════════════════════════════════ */
   const MAX_COMBOS = 2000;
 
   function buildPersonCombinations(courseCodes, classData) {
-    // Build list of "choice axes" — each axis is an array of section options
-    const axes = []; // each: {key: "COURSE:activity", options: [{section, slots}]}
+    const axes = [];
     for (const code of courseCodes) {
       const actMap = classData.get(code);
       if (!actMap) continue;
@@ -972,8 +989,6 @@
       }
     }
     if (axes.length === 0) return [{ busySlots: new Set(), assignment: new Map() }];
-
-    // Cartesian product with early pruning at MAX_COMBOS
     let combos = [{ busySlots: new Set(), assignment: new Map() }];
     for (const axis of axes) {
       const next = [];
@@ -993,125 +1008,78 @@
     return combos;
   }
 
-  /**
-   * MAIN ALGORITHM
-   * Given an array of members (each with {userId, displayName, courseCodes}),
-   * find the combination of section choices across all members that maximises
-   * the total shared free hours (Mon–Fri, 9am–8pm).
-   *
-   * Strategy:
-   * 1. For each member, compute all valid timetable combinations.
-   * 2. Greedily combine: start with member 0, for each subsequent member
-   *    try all their combinations and pick the one that maximises overlap
-   *    with the running "group busy" picture. This is O(M × K) rather than
-   *    O(K^M) for large groups.
-   * 3. For small groups (≤3 members, ≤MAX_COMBOS total) do exact search.
-   */
   async function runOptimisation(members, classData) {
-    const TOTAL_SLOTS = SLOTS_PER_DAY * DAYS.length; // 110
-
-    // Build combinations per member
-    const memberCombos = members.map(m => ({
-      ...m,
-      combos: buildPersonCombinations(m.courseCodes, classData),
-    }));
-
-    // Exact search for small cases, greedy for larger
+    const TOTAL_SLOTS = SLOTS_PER_DAY * DAYS.length;
+    const memberCombos = members.map(m => ({ ...m, combos: buildPersonCombinations(m.courseCodes, classData) }));
     const totalProduct = memberCombos.reduce((acc, m) => acc * m.combos.length, 1);
 
-    let bestScore       = -1;
-    let bestAssignments = null; // Array<Map<key, {section}>> one per member
-    let bestGroupBusy   = null;
+    let bestScore = -1, bestAssignments = null, bestGroupBusy = null;
 
     if (totalProduct <= 10000) {
-      // Exact: try all combinations
-      function search(idx, currentGroupBusy, currentAssignments) {
+      function search(idx, gb, ga) {
         if (idx === memberCombos.length) {
-          // Score = free slots shared by everyone = TOTAL_SLOTS - |groupBusy|
-          const score = TOTAL_SLOTS - currentGroupBusy.size;
-          if (score > bestScore) {
-            bestScore       = score;
-            bestAssignments = currentAssignments.map(a => new Map(a));
-            bestGroupBusy   = new Set(currentGroupBusy);
-          }
+          const score = TOTAL_SLOTS - gb.size;
+          if (score > bestScore) { bestScore=score; bestAssignments=ga.map(a=>new Map(a)); bestGroupBusy=new Set(gb); }
           return;
         }
         for (const combo of memberCombos[idx].combos) {
-          const merged = new Set([...currentGroupBusy, ...combo.busySlots]);
-          currentAssignments.push(combo.assignment);
-          search(idx + 1, merged, currentAssignments);
-          currentAssignments.pop();
+          const merged = new Set([...gb, ...combo.busySlots]);
+          ga.push(combo.assignment); search(idx+1,merged,ga); ga.pop();
         }
       }
       search(0, new Set(), []);
     } else {
-      // Greedy: fix each member's best choice sequentially
-      let groupBusy   = new Set();
+      let groupBusy = new Set();
       bestAssignments = [];
       for (const mc of memberCombos) {
-        let bestPersonScore = -1;
-        let bestCombo       = mc.combos[0];
+        let bestPersonScore=-1, bestCombo=mc.combos[0];
         for (const combo of mc.combos) {
-          const merged = new Set([...groupBusy, ...combo.busySlots]);
-          const score  = TOTAL_SLOTS - merged.size;
-          if (score > bestPersonScore) { bestPersonScore = score; bestCombo = combo; }
+          const merged=new Set([...groupBusy,...combo.busySlots]);
+          const score=TOTAL_SLOTS-merged.size;
+          if (score>bestPersonScore){ bestPersonScore=score; bestCombo=combo; }
         }
         for (const s of bestCombo.busySlots) groupBusy.add(s);
         bestAssignments.push(bestCombo.assignment);
-        bestGroupBusy = new Set(groupBusy);
+        bestGroupBusy=new Set(groupBusy);
       }
-      bestScore = TOTAL_SLOTS - bestGroupBusy.size;
+      bestScore=TOTAL_SLOTS-bestGroupBusy.size;
     }
 
-    // Derive per-member busy slots for timetable rendering
     const memberBusySlots = memberCombos.map((mc, i) => {
       const combo = mc.combos.find(c => {
         const a = bestAssignments[i];
-        for (const [k, v] of a) {
-          const opt = c.assignment.get(k);
-          if (!opt || opt.section !== v.section) return false;
-        }
+        for (const [k,v] of a) { const opt=c.assignment.get(k); if(!opt||opt.section!==v.section) return false; }
         return true;
       }) || mc.combos[0];
       return combo.busySlots;
     });
 
     return {
-      bestScore,
-      bestAssignments,
+      bestScore, bestAssignments,
       bestGroupBusy: bestGroupBusy || new Set(),
-      members: memberCombos.map((mc, i) => ({
-        userId:      mc.userId,
-        displayName: mc.displayName,
-        courseCodes: mc.courseCodes,
-        assignment:  bestAssignments ? bestAssignments[i] : new Map(),
-        busySlots:   memberBusySlots[i],
+      members: memberCombos.map((mc,i) => ({
+        userId: mc.userId, displayName: mc.displayName, courseCodes: mc.courseCodes,
+        assignment: bestAssignments ? bestAssignments[i] : new Map(),
+        busySlots: memberBusySlots[i],
       })),
     };
   }
 
-  /** Extract contiguous free windows ≥ 1 hour (2 slots) from the group busy set */
   function extractFreeWindows(groupBusySlots) {
     const windows = [];
-    for (let d = 0; d < DAYS.length; d++) {
-      let runStart = null;
-      for (let s = 0; s <= SLOTS_PER_DAY; s++) {
-        const slotIdx = d * SLOTS_PER_DAY + s;
-        const isFree  = s < SLOTS_PER_DAY && !groupBusySlots.has(slotIdx);
-        if (isFree && runStart === null) runStart = s;
-        if (!isFree && runStart !== null) {
-          const duration = s - runStart;
-          if (duration >= 2) { // ≥ 1 hour
-            const startH = SLOT_START + runStart;
-            const endH   = SLOT_START + s;
-            windows.push({
-              day: DAYS[d],
-              startH, endH,
-              durationMins: duration * 30,
-              label: `${DAYS[d]} ${fmtTime(startH)} – ${fmtTime(endH)}`,
-            });
+    for (let d=0; d<DAYS.length; d++) {
+      let runStart=null;
+      for (let s=0; s<=SLOTS_PER_DAY; s++) {
+        const slotIdx=d*SLOTS_PER_DAY+s;
+        const isFree=s<SLOTS_PER_DAY&&!groupBusySlots.has(slotIdx);
+        if (isFree&&runStart===null) runStart=s;
+        if (!isFree&&runStart!==null) {
+          const duration=s-runStart;
+          if (duration>=2) {
+            const startH=SLOT_START+runStart, endH=SLOT_START+s;
+            windows.push({ day:DAYS[d], startH, endH, durationMins:duration*30, label:`${DAYS[d]} ${fmtTime(startH)} – ${fmtTime(endH)}` });
           }
-          runStart = null;
+          runStart=null;
         }
       }
     }
@@ -1119,10 +1087,8 @@
   }
 
   function fmtTime(halfHours) {
-    const h = Math.floor(halfHours / 2);
-    const m = halfHours % 2 === 0 ? '00' : '30';
-    const ampm = h >= 12 ? 'pm' : 'am';
-    const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
+    const h=Math.floor(halfHours/2), m=halfHours%2===0?'00':'30';
+    const ampm=h>=12?'pm':'am', h12=h>12?h-12:h===0?12:h;
     return `${h12}:${m}${ampm}`;
   }
 
@@ -1130,16 +1096,14 @@
      ALGORITHM — UI runner
   ═══════════════════════════════════════════════════════════ */
   function resetSyncBody() {
-    const body = document.getElementById('sync-body');
-    body.innerHTML = `<div class="sync-locked">
+    document.getElementById('sync-body').innerHTML=`<div class="sync-locked">
       <div class="sync-locked-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="4" y="7" width="8" height="7" rx="2" stroke="var(--mid)" stroke-width="1.3"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" stroke="var(--mid)" stroke-width="1.3" stroke-linecap="round"/></svg></div>
       <p id="sync-locked-msg">At least 2 members need to add their courses before finding windows.</p>
     </div>`;
   }
 
   function setAlgoProgress(pct, statusMsg) {
-    const body = document.getElementById('sync-body');
-    body.innerHTML = `<div class="algo-progress">
+    document.getElementById('sync-body').innerHTML=`<div class="algo-progress">
       <div class="algo-progress-label"><span class="spinner-dark"></span> Optimising timetables…</div>
       <div class="algo-bar-track"><div class="algo-bar-fill" style="width:${pct}%"></div></div>
       <div class="algo-status">${esc(statusMsg)}</div>
@@ -1148,177 +1112,218 @@
 
   async function runAlgorithm() {
     if (algoRunning) return;
-    if (!groupCoursesData || !groupCoursesData.is_ready) return;
-    algoRunning = true;
-    const btn = document.getElementById('find-windows-btn');
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Finding…';
-
+    if (!groupCoursesData||!groupCoursesData.is_ready) return;
+    algoRunning=true;
+    const btn=document.getElementById('find-windows-btn');
+    btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Finding…';
     try {
-      setAlgoProgress(10, 'Refreshing group courses…');
-      const freshData = await api(`/groups/${currentGroupId}/courses`);
-      groupCoursesData = freshData;
-      renderReadiness(freshData);
-
-      const activeMems = freshData.members.filter(m => m.course_codes.length > 0);
-      if (activeMems.length < 2) { showToast('Need at least 2 members with courses'); return; }
-
-      setAlgoProgress(25, `Fetching timetable data for ${activeMems.length} members…`);
-      const allCodes = [...new Set(activeMems.flatMap(m => m.course_codes))];
-      const classData = await fetchClassesForCourses(allCodes);
-
-      setAlgoProgress(55, 'Building timetable combinations…');
-      const membersForAlgo = activeMems.map(m => ({
-        userId:      m.user_id,
-        displayName: m.display_name,
-        courseCodes: m.course_codes,
-      }));
-
-      setAlgoProgress(70, 'Running optimisation…');
-      // Yield to browser to update UI
-      await new Promise(r => setTimeout(r, 20));
-      const result = await runOptimisation(membersForAlgo, classData);
-
-      setAlgoProgress(95, 'Computing free windows…');
-      const windows = extractFreeWindows(result.bestGroupBusy);
-      result.windows = windows;
-      lastAlgoResult = result;
-
-      setAlgoProgress(100, 'Done!');
-      await new Promise(r => setTimeout(r, 300));
+      setAlgoProgress(10,'Refreshing group courses…');
+      const freshData=await api(`/groups/${currentGroupId}/courses`);
+      groupCoursesData=freshData; renderReadiness(freshData);
+      const activeMems=freshData.members.filter(m=>m.course_codes.length>0);
+      if (activeMems.length<2){ showToast('Need at least 2 members with courses'); return; }
+      setAlgoProgress(25,`Fetching timetable data for ${activeMems.length} members…`);
+      const allCodes=[...new Set(activeMems.flatMap(m=>m.course_codes))];
+      const classData=await fetchClassesForCourses(allCodes);
+      setAlgoProgress(55,'Building timetable combinations…');
+      const membersForAlgo=activeMems.map(m=>({ userId:m.user_id, displayName:m.display_name, courseCodes:m.course_codes }));
+      setAlgoProgress(70,'Running optimisation…');
+      await new Promise(r=>setTimeout(r,20));
+      const result=await runOptimisation(membersForAlgo,classData);
+      setAlgoProgress(95,'Computing free windows…');
+      result.windows=extractFreeWindows(result.bestGroupBusy);
+      lastAlgoResult=result;
+      setAlgoProgress(100,'Done!');
+      await new Promise(r=>setTimeout(r,300));
       renderAlgoResult(result);
-
-    } catch(e) {
-      console.error('Algorithm error:', e);
-      document.getElementById('sync-body').innerHTML = `<div class="error-msg">Could not complete optimisation: ${esc(e.message)}</div>`;
-      showToast('Optimisation failed: ' + e.message);
+    } catch(e){
+      console.error('Algorithm error:',e);
+      document.getElementById('sync-body').innerHTML=`<div class="error-msg">Could not complete optimisation: ${esc(e.message)}</div>`;
+      showToast('Optimisation failed: '+e.message);
     } finally {
-      algoRunning = false;
-      btn.disabled = false;
-      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="white" stroke-width="1.4"/><path d="M5 7l2 2 2-3" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Find windows`;
+      algoRunning=false; btn.disabled=false;
+      btn.innerHTML=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="white" stroke-width="1.4"/><path d="M5 7l2 2 2-3" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Find windows`;
     }
   }
 
   function renderAlgoResult(result) {
     const { bestScore, members, windows } = result;
-    const totalHours = (bestScore * 30 / 60).toFixed(1);
-
-    let html = '';
-
-    // Score badge
-    html += `<div class="score-badge">
-      <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1l1.5 4h4.2l-3.4 2.5 1.3 4L7 9l-3.6 2.5 1.3-4L1.3 5H5.5z" fill="white"/></svg>
-      ${totalHours}h shared free time per week
-    </div>`;
-
-    // Timetable grid
-    html += `<div class="timetable-wrap">${renderTimetable(result)}</div>`;
-    html += `<div class="timetable-legend">
+    const totalHours=(bestScore*30/60).toFixed(1);
+    let html='';
+    html+=`<div class="score-badge"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 1l1.5 4h4.2l-3.4 2.5 1.3 4L7 9l-3.6 2.5 1.3-4L1.3 5H5.5z" fill="white"/></svg>${totalHours}h shared free time per week</div>`;
+    html+=`<div class="timetable-wrap">${renderTimetable(result)}</div>`;
+    html+=`<div class="timetable-legend">
       <div class="legend-item"><div class="legend-swatch" style="background:#4A7C59;opacity:.85;border:none"></div>Everyone free</div>
       <div class="legend-item"><div class="legend-swatch" style="background:var(--green-bg);border-color:var(--green-bd)"></div>Some free</div>
       <div class="legend-item"><div class="legend-swatch" style="background:#FEF0EC;border-color:#F5C6B5"></div>Someone busy</div>
     </div>`;
-
-    // Free windows
-    html += `<div class="section-divider"></div>`;
-    html += `<div style="font-size:.78rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin-bottom:.5rem;">Free windows ≥ 1 hour</div>`;
-    if (windows.length === 0) {
-      html += `<div class="window-empty">No shared free windows found. Try adjusting your course selections.</div>`;
+    html+=`<div class="section-divider"></div>`;
+    html+=`<div style="font-size:.78rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin-bottom:.5rem;">Free windows ≥ 1 hour</div>`;
+    if (!windows.length) {
+      html+=`<div class="window-empty">No shared free windows found. Try adjusting your course selections.</div>`;
     } else {
-      html += `<div class="windows-list">` + windows.map((w, i) => `
+      html+=`<div class="windows-list">`+windows.map((w,i)=>`
         <div class="window-item" style="animation-delay:${i*.05}s">
           <div class="window-dot"></div>
-          <div class="window-info">
-            <div class="window-time">${esc(w.label)}</div>
-            <div class="window-dur">${w.durationMins >= 60 ? (w.durationMins/60).toFixed(1)+'h' : w.durationMins+'min'}</div>
-          </div>
-        </div>`).join('') + `</div>`;
+          <div class="window-info"><div class="window-time">${esc(w.label)}</div><div class="window-dur">${w.durationMins>=60?(w.durationMins/60).toFixed(1)+'h':w.durationMins+'min'}</div></div>
+        </div>`).join('')+`</div>`;
     }
-
-    // Recommended assignments
-    html += `<div class="section-divider"></div>`;
-    html += `<div style="font-size:.78rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin-bottom:.5rem;">Recommended class selections</div>`;
-    html += `<div class="assignment-list">`;
+    html+=`<div class="section-divider"></div>`;
+    html+=`<div style="font-size:.78rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--mid);margin-bottom:.5rem;">Recommended class selections</div>`;
+    html+=`<div class="assignment-list">`;
     for (const mem of members) {
-      if (!mem.assignment || mem.assignment.size === 0) continue;
-      html += `<div class="assignment-person">
-        <div class="assignment-name">${esc(mem.displayName)}</div>
-        <div class="assignment-courses">`;
-      for (const [key, val] of mem.assignment) {
-        const [course, activity] = key.split(':');
-        const isLec = activity.toLowerCase().includes('lec');
-        html += `<span class="assignment-chip ${isLec?'lec':'tut'}" title="${esc(activity)}">${esc(course)} ${esc(val.section)}</span>`;
+      if (!mem.assignment||mem.assignment.size===0) continue;
+      html+=`<div class="assignment-person"><div class="assignment-name">${esc(mem.displayName)}</div><div class="assignment-courses">`;
+      for (const [key,val] of mem.assignment) {
+        const [course,activity]=key.split(':');
+        const isLec=activity.toLowerCase().includes('lec');
+        html+=`<span class="assignment-chip ${isLec?'lec':'tut'}" title="${esc(activity)}">${esc(course)} ${esc(val.section)}</span>`;
       }
-      html += `</div></div>`;
+      html+=`</div></div>`;
     }
-    html += `</div>`;
+    html+=`</div>`;
+    document.getElementById('sync-body').innerHTML=html;
 
-    document.getElementById('sync-body').innerHTML = html;
+    attachTimetableTooltips(result);
   }
 
-  /** Build the timetable HTML table */
-  function renderTimetable(result) {
-    const { members, bestGroupBusy } = result;
-    // Per-slot: how many members are busy?
-    const busyCounts = new Array(SLOTS_PER_DAY * DAYS.length).fill(0);
-    for (const mem of members) {
-      for (const s of mem.busySlots) busyCounts[s] = (busyCounts[s]||0) + 1;
+  /* ═══════════════════════════════════════════════════════════
+     Timetable hover tooltips
+  ═══════════════════════════════════════════════════════════ */
+  function attachTimetableTooltips(result) {
+    const { members } = result;
+    if (!members.length) return;
+
+    const slotInfo = new Map();
+    for (let i=0; i<members.length; i++) {
+      const mem = members[i];
+      for (let d=0; d<DAYS.length; d++) {
+        for (let s=0; s<SLOTS_PER_DAY; s++) {
+          const idx = d*SLOTS_PER_DAY+s;
+          if (!slotInfo.has(idx)) {
+            slotInfo.set(idx, members.map(m => ({ name: m.displayName, busy: m.busySlots.has(idx) })));
+          }
+        }
+      }
     }
+
+    const tooltip = document.getElementById('slot-tooltip');
+    const tooltipTime = document.getElementById('slot-tooltip-time');
+    const tooltipBody = document.getElementById('slot-tooltip-body');
+    const table = document.querySelector('.timetable');
+    if (!table) return;
+
+    table.querySelectorAll('td[data-slot-idx]').forEach(td => {
+      const idx = parseInt(td.dataset.slotIdx, 10);
+      td.classList.add('has-tooltip');
+
+      td.addEventListener('mouseenter', e => {
+        const d = Math.floor(idx / SLOTS_PER_DAY);
+        const s = idx % SLOTS_PER_DAY;
+        const halfHour = SLOT_START + s;
+        tooltipTime.textContent = `${DAYS[d]} · ${fmtTime(halfHour)} – ${fmtTime(halfHour+1)}`;
+
+        const rows = slotInfo.get(idx) || [];
+        tooltipBody.innerHTML = rows.map(r =>
+          `<div class="slot-tooltip-row">
+            <div class="slot-dot ${r.busy?'busy':'free'}"></div>
+            <span class="slot-name">${esc(r.name)}</span>
+            <span class="slot-status">${r.busy?'in class':'free'}</span>
+          </div>`
+        ).join('');
+
+        tooltip.classList.add('visible');
+        positionTooltip(e);
+      });
+
+      td.addEventListener('mousemove', positionTooltip);
+      td.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+    });
+  }
+
+  function positionTooltip(e) {
+    const tooltip = document.getElementById('slot-tooltip');
+    const margin = 14;
+    const tw = tooltip.offsetWidth || 180;
+    const th = tooltip.offsetHeight || 80;
+    let x = e.clientX + margin;
+    let y = e.clientY - th / 2;
+    if (x + tw > window.innerWidth - margin) x = e.clientX - tw - margin;
+    if (y < margin) y = margin;
+    if (y + th > window.innerHeight - margin) y = window.innerHeight - th - margin;
+    tooltip.style.left = x + 'px';
+    tooltip.style.top  = y + 'px';
+  }
+
+  function renderTimetable(result) {
+    const { members } = result;
+    const busyCounts = new Array(SLOTS_PER_DAY*DAYS.length).fill(0);
+    for (const mem of members) for (const s of mem.busySlots) busyCounts[s]=(busyCounts[s]||0)+1;
     const N = members.length;
 
-    let rows = `<table class="timetable"><thead><tr><th></th>`;
-    for (const d of DAYS) rows += `<th>${d}</th>`;
-    rows += `</tr></thead><tbody>`;
+    let rows=`<table class="timetable"><thead><tr><th></th>`;
+    for (const d of DAYS) rows+=`<th>${d}</th>`;
+    rows+=`</tr></thead><tbody>`;
 
-    for (let s = 0; s < SLOTS_PER_DAY; s++) {
-      const halfHour = SLOT_START + s;
-      const showLabel = halfHour % 2 === 0; // only on the hour
-      rows += `<tr><td class="time-label">${showLabel ? fmtTime(halfHour) : ''}</td>`;
-      for (let d = 0; d < DAYS.length; d++) {
-        const idx = d * SLOTS_PER_DAY + s;
-        const cnt = busyCounts[idx] || 0;
-        let cls = '';
-        if (cnt === 0) cls = 'slot-free-overlap'; // all free
-        else if (cnt === N) cls = 'slot-busy';      // all busy
-        else cls = 'slot-partial';                  // some free
-        rows += `<td class="${cls}"></td>`;
+    for (let s=0; s<SLOTS_PER_DAY; s++) {
+      const halfHour=SLOT_START+s;
+      const showLabel=halfHour%2===0;
+      rows+=`<tr><td class="time-label">${showLabel?fmtTime(halfHour):''}</td>`;
+      for (let d=0; d<DAYS.length; d++) {
+        const idx=d*SLOTS_PER_DAY+s;
+        const cnt=busyCounts[idx]||0;
+        let cls=cnt===0?'slot-free-overlap':cnt===N?'slot-busy':'slot-partial';
+        rows+=`<td class="${cls}" data-slot-idx="${idx}"></td>`;
       }
-      rows += `</tr>`;
+      rows+=`</tr>`;
     }
-    rows += `</tbody></table>`;
+    rows+=`</tbody></table>`;
     return rows;
   }
 
   /* ═══════════════════════════════════════════════════════════
-     MODALS — leave / delete / create / join
+     MODALS
   ═══════════════════════════════════════════════════════════ */
   function openLeaveModal() {
     document.getElementById('modal-backdrop').style.display='flex';
-    ['modal-create','modal-join','modal-delete'].forEach(id=>document.getElementById(id).style.display='none');
+    ['modal-create','modal-join','modal-delete','modal-kick'].forEach(id=>document.getElementById(id).style.display='none');
     document.getElementById('modal-leave').style.display='block';
   }
+
   async function doLeave() {
     const btn=document.getElementById('leave-confirm-btn');
     btn.disabled=true; btn.textContent='Leaving…';
-    try { await api(`/groups/${currentGroupId}/leave`,{method:'DELETE'}); closeAllModals(); showToast('You left the group'); showDashboard(); }
-    catch(e){ showToast(e.message); }
-    finally { btn.disabled=false; btn.textContent='Leave group'; }
+    try {
+      await api(`/groups/${currentGroupId}/leave`,{method:'DELETE'});
+      if (currentGroupData && currentGroupData.members) {
+        currentGroupData.members = currentGroupData.members.filter(m => String(m.id) !== String(currentUser.id));
+        const newCount = currentGroupData.members.length;
+        document.getElementById('detail-member-count').textContent = `${newCount} member${newCount!==1?'s':''}`;
+        renderMemberList(currentGroupData);
+      }
+      closeAllModals();
+      showToast('You left the group');
+      showDashboard();
+    } catch(e){
+      showToast(e.message);
+      btn.disabled=false; btn.textContent='Leave group';
+    }
   }
+
   function openDeleteModal() {
     document.getElementById('modal-backdrop').style.display='flex';
-    ['modal-create','modal-join','modal-leave'].forEach(id=>document.getElementById(id).style.display='none');
+    ['modal-create','modal-join','modal-leave','modal-kick'].forEach(id=>document.getElementById(id).style.display='none');
     document.getElementById('modal-delete').style.display='block';
   }
   async function doDeleteGroup() {
     const btn=document.getElementById('delete-confirm-btn');
     btn.disabled=true; btn.textContent='Deleting…';
     try { await api(`/groups/${currentGroupId}`,{method:'DELETE'}); closeAllModals(); showToast('Group deleted'); showDashboard(); }
-    catch(e){ showToast(e.message); }
-    finally { btn.disabled=false; btn.textContent='Delete group'; }
+    catch(e){ showToast(e.message); btn.disabled=false; btn.textContent='Delete group'; }
   }
   function openCreateModal() {
     document.getElementById('modal-backdrop').style.display='flex';
-    ['modal-join','modal-leave','modal-delete'].forEach(id=>document.getElementById(id).style.display='none');
+    ['modal-join','modal-leave','modal-delete','modal-kick'].forEach(id=>document.getElementById(id).style.display='none');
     document.getElementById('modal-create').style.display='block';
     setTimeout(()=>document.getElementById('create-name').focus(),50);
   }
@@ -1333,7 +1338,7 @@
   }
   function openJoinModal() {
     document.getElementById('modal-backdrop').style.display='flex';
-    ['modal-create','modal-leave','modal-delete'].forEach(id=>document.getElementById(id).style.display='none');
+    ['modal-create','modal-leave','modal-delete','modal-kick'].forEach(id=>document.getElementById(id).style.display='none');
     document.getElementById('modal-join').style.display='block';
     document.getElementById('join-error').style.display='none';
     setTimeout(()=>document.getElementById('join-code').focus(),50);
@@ -1350,13 +1355,45 @@
     finally { btn.disabled=false; btn.textContent='Join'; }
   }
 
+  /* Owner Remove/Kick feature */
+  let memberToKick = null;
+  function openKickModal(userId, name) {
+    memberToKick = userId;
+    document.getElementById('kick-member-name').textContent = name;
+    document.getElementById('modal-backdrop').style.display='flex';
+    ['modal-create','modal-join','modal-leave','modal-delete'].forEach(id=>document.getElementById(id).style.display='none');
+    document.getElementById('modal-kick').style.display='block';
+  }
+  
+  async function doKick() {
+    if (!memberToKick) return;
+    const btn=document.getElementById('kick-confirm-btn');
+    btn.disabled=true; btn.textContent='Removing…';
+    try {
+      await api(`/groups/${currentGroupId}/members/${memberToKick}`,{method:'DELETE'});
+      // Instant UI Update
+      if (currentGroupData && currentGroupData.members) {
+        currentGroupData.members = currentGroupData.members.filter(m => String(m.id) !== String(memberToKick));
+        const newCount = currentGroupData.members.length;
+        document.getElementById('detail-member-count').textContent = `${newCount} member${newCount!==1?'s':''}`;
+        renderMemberList(currentGroupData);
+      }
+      closeAllModals();
+      showToast('Member removed');
+    } catch(e){ 
+      showToast(e.message); 
+    } finally { 
+      btn.disabled=false; btn.textContent='Remove'; 
+    }
+  }
+
   /* ═══════════════════════════════════════════════════════════
      UTILITIES
   ═══════════════════════════════════════════════════════════ */
   function closeModal(e){ if(e.target===document.getElementById('modal-backdrop')) closeAllModals(); }
   function closeAllModals(){
     document.getElementById('modal-backdrop').style.display='none';
-    ['modal-create','modal-join','modal-leave','modal-delete'].forEach(id=>document.getElementById(id).style.display='none');
+    ['modal-create','modal-join','modal-leave','modal-delete','modal-kick'].forEach(id=>document.getElementById(id).style.display='none');
   }
   function copyInviteCode(){ copyCode(document.getElementById('detail-code').textContent); }
   function copyCode(code){ navigator.clipboard.writeText(code).then(()=>showToast('Invite code copied!')); }
